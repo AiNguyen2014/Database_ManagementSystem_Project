@@ -36,6 +36,8 @@
             txtMatKhau = new TextBox();
             lblMatKhau = new Label();
             btnThoat = new Button();
+            linkLabelDangKyNgay = new LinkLabel();
+            label1 = new Label();
             SuspendLayout();
             // 
             // btnDangNhap
@@ -43,7 +45,7 @@
             btnDangNhap.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnDangNhap.ForeColor = Color.Purple;
             btnDangNhap.Image = (Image)resources.GetObject("btnDangNhap.Image");
-            btnDangNhap.Location = new Point(139, 243);
+            btnDangNhap.Location = new Point(112, 230);
             btnDangNhap.Name = "btnDangNhap";
             btnDangNhap.Size = new Size(140, 41);
             btnDangNhap.TabIndex = 3;
@@ -95,7 +97,7 @@
             // lblMatKhau
             // 
             lblMatKhau.AutoSize = true;
-            lblMatKhau.BackColor = Color.FromArgb(0, 0, 192);
+            lblMatKhau.BackColor = Color.DarkBlue;
             lblMatKhau.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             lblMatKhau.ForeColor = Color.GhostWhite;
             lblMatKhau.Location = new Point(32, 183);
@@ -109,7 +111,7 @@
             btnThoat.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnThoat.ForeColor = Color.Purple;
             btnThoat.Image = (Image)resources.GetObject("btnThoat.Image");
-            btnThoat.Location = new Point(306, 243);
+            btnThoat.Location = new Point(306, 230);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(120, 41);
             btnThoat.TabIndex = 4;
@@ -118,12 +120,35 @@
             btnThoat.UseVisualStyleBackColor = true;
             btnThoat.Click += btnThoat_Click;
             // 
+            // linkLabelDangKyNgay
+            // 
+            linkLabelDangKyNgay.AutoSize = true;
+            linkLabelDangKyNgay.BackColor = Color.White;
+            linkLabelDangKyNgay.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
+            linkLabelDangKyNgay.Location = new Point(47, 284);
+            linkLabelDangKyNgay.Name = "linkLabelDangKyNgay";
+            linkLabelDangKyNgay.Size = new Size(277, 23);
+            linkLabelDangKyNgay.TabIndex = 5;
+            linkLabelDangKyNgay.TabStop = true;
+            linkLabelDangKyNgay.Text = "Chưa có tài khoản? Đăng ký ngay";
+            linkLabelDangKyNgay.LinkClicked += linkLabelDangKyNgay_LinkClicked;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(47, 230);
+            label1.Name = "label1";
+            label1.Size = new Size(0, 20);
+            label1.TabIndex = 6;
+            // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
             ClientSize = new Size(482, 325);
+            Controls.Add(label1);
+            Controls.Add(linkLabelDangKyNgay);
             Controls.Add(btnThoat);
             Controls.Add(txtMatKhau);
             Controls.Add(lblMatKhau);
@@ -148,5 +173,7 @@
         private Label lblMatKhau;
         private Button btnThoat;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private LinkLabel linkLabelDangKyNgay;
+        private Label label1;
     }
 }

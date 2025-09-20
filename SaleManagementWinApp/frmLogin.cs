@@ -1,15 +1,13 @@
-﻿using SaleManagementLibrraly.App.Code;
-using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.Repository;
-/*using static System.Windows.Forms.VisualStyles.VisualStyleElement;*/
-
+﻿using SaleManagementLibrraly.BussinessObject;
+using SaleManagementLibrraly.DataAccess; // SỬA: Dùng DataAccess thay vì Repository
+using System;
+using System.Windows.Forms;
 
 namespace SaleManagementWinApp
 {
     public partial class frmLogin : Form
     {
-        public INguoiDungRepository NguoiDungRepository { get; set; }
-        INguoiDungRepository nguoiDungRepository = new NguoiDungRepository();
+        
         public frmLogin()
         {
             InitializeComponent();
@@ -19,6 +17,7 @@ namespace SaleManagementWinApp
         {
             try
             {
+                // Giữ lại phần kiểm tra dữ liệu trống, rất tốt!
                 if (string.IsNullOrEmpty(txtDangNhap.Text))
                 {
                     errorProvider1?.SetError(txtDangNhap, "Vui lòng nhập tên đăng nhập");
@@ -29,50 +28,43 @@ namespace SaleManagementWinApp
                     errorProvider1?.SetError(txtMatKhau, "Vui lòng nhập mật khẩu");
                     return;
                 }
-                else
+
+                errorProvider1?.Clear();
+
+                // SỬA: Gọi trực tiếp hàm CheckLogin từ TaiKhoanDAL
+                TaiKhoan taiKhoan = TaiKhoanDAL.Instance.CheckLogin(txtDangNhap.Text, txtMatKhau.Text);
+
+                if (taiKhoan != null) // Nếu tìm thấy tài khoản
                 {
-                    errorProvider1?.Clear();
-                    // Thực hiện xử lý đăng nhập ở đây
-                    var nguoiDung = GetNguoiDungObject();
-                    var user = nguoiDungRepository.GetNguoiDungLogin(nguoiDung.TenDangNhap, Common.EncryptMD5(nguoiDung.MatKhau));
-                    if (user != null)
+                    this.Hide(); // Ẩn form login đi
+
+                    MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // SỬA: Kiểm tra vai trò bằng chuỗi (string), không dùng số
+                    if (taiKhoan.VaiTro.Equals("NhanVien", StringComparison.OrdinalIgnoreCase))
                     {
-                        this.Visible = false;
-                        if (MessageBox.Show("Bạn đã đăng nhập thành công", "Thông tin") == DialogResult.OK)
-                        {
-                            Common.WriteLog("Login", "btnDangNhap_Click", nguoiDung.TenDangNhap + " đăng nhập hệ thống");
-                            if (user.LoaiNguoiDung == 1)
-                            {
-                                frmMain f_main = new frmMain()
-                                {
-                                    Text = "Hệ thống Quản trị",
-                                };
-                                f_main.Show();
-                            }
-                            else
-                            {
-                                //Khách hàng
-                                if (user.LoaiNguoiDung == 2)
-                                {
-                                    frmMainKhachHang f_main = new frmMainKhachHang()
-                                    {
-                                        Text = "Quản trị của Khách hàng",
-                                        NguoiDungInfo = user
-                                    };
-                                    f_main.Show();
-                                }
-                            }
-                        }
+                        // Mở form chính cho nhân viên/quản trị
+                        frmMain f_main = new frmMain();
+                        f_main.ShowDialog(); // Dùng ShowDialog để form chính đóng thì ứng dụng mới thoát
                     }
-                    else
+                    else if (taiKhoan.VaiTro.Equals("KhachHang", StringComparison.OrdinalIgnoreCase))
                     {
-                        MessageBox.Show("Bạn đã đăng nhập thất bại", "Thông tin");
+                        // Mở form cho khách hàng
+                        frmMainKhachHang f_main_kh = new frmMainKhachHang();
+                        // Nếu cần truyền thông tin khách hàng sang form chính thì làm ở đây
+                        // f_main_kh.ThongTinKhachHang = khachHang; 
+                        f_main_kh.ShowDialog();
                     }
+                    this.Close(); // Sau khi form chính đóng, đóng luôn form login
+                }
+                else // Nếu không tìm thấy
+                {
+                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không chính xác.", "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                MessageBox.Show("Đã xảy ra lỗi: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -80,22 +72,11 @@ namespace SaleManagementWinApp
         {
             Application.Exit();
         }
-        private NguoiDung GetNguoiDungObject()
+
+        private void linkLabelDangKyNgay_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            NguoiDung nguoiDung = null;
-            try
-            {
-                nguoiDung = new NguoiDung
-                {
-                    TenDangNhap = txtDangNhap.Text,
-                    MatKhau = txtMatKhau.Text
-                };
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Get car");
-            }
-            return nguoiDung;
+            frmKhachHangDangKy frm = new frmKhachHangDangKy();
+            frm.ShowDialog();
         }
     }
 }

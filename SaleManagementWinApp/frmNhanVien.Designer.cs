@@ -139,6 +139,7 @@
             lblQLNV.Size = new Size(291, 37);
             lblQLNV.TabIndex = 8;
             lblQLNV.Text = "QUẢN LÝ NHÂN VIÊN";
+            lblQLNV.Click += lblQLNV_Click;
             // 
             // frmNhanVien
             // 

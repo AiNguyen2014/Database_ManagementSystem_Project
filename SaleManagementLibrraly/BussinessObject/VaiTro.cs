@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SaleManagementLibrraly.BussinessObject
 {
-    public class LoaiNguoiDung
+    public class VaiTro
     {
         public int Id { get; set; }
         public string Name { get; set; }

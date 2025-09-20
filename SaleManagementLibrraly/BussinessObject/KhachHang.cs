@@ -8,9 +8,12 @@ namespace SaleManagementLibrraly.BussinessObject
 {
     public class KhachHang
     {
-        public int MaKhach { get; set; }
-        public string TenKhach { get; set; }
+        public int MaKH { get; set; }
+        public string Hoten { get; set; }
         public string DiaChi { get; set; }
-        public string DienThoai { get; set; }
+        public string GioiTinh { get; set; }
+        public string SoDienThoai { get; set; }
+
+
     }
 }

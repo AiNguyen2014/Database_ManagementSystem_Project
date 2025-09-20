@@ -1,42 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using SaleManagementLibrraly.BussinessObject;
+using SaleManagementLibrraly.DataAccess; // SỬA: Dùng DataAccess
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.Repository;
 
 namespace SaleManagementWinApp
 {
     public partial class frmNhanVien : Form
     {
-        INhanVienRepository nhanVienRepository = new NhanVienRepository();
+        // KHÔNG DÙNG Repository nữa
+        // INhanVienRepository nhanVienRepository = new NhanVienRepository();
         BindingSource source;
-        NhanVien nv;
+
         public frmNhanVien()
         {
             InitializeComponent();
-        }
-
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            frmNhanVienUpdate frmNVUpdate = new frmNhanVienUpdate()
-            {
-                Text = "Update Nhân Viên",
-                InsertOrUpdate = false,
-                NhanVienInfo = nv,
-                NhanVienRepository = nhanVienRepository
-            };
-            frmNVUpdate.Owner = this;
-            if (frmNVUpdate.ShowDialog() == DialogResult.OK)
-            {
-                LoadNhanVienList();
-                source.Position = source.Count - 1;
-            }
         }
 
         private void frmNhanVien_Load(object sender, EventArgs e)
@@ -46,15 +24,30 @@ namespace SaleManagementWinApp
 
         public void LoadNhanVienList()
         {
-            var nhanViens = nhanVienRepository.GetNhanViens();
             try
             {
+                // SỬA: Gọi từ NhanVienDAL.Instance
+                var nhanViens = NhanVienDAL.Instance.GetAll();
+
                 source = new BindingSource();
                 source.DataSource = nhanViens;
 
-                dgvNV.DataSource = null;
+                dgvNV.DataSource = null; // Luôn xóa datasource cũ
                 dgvNV.DataSource = source;
-                if (nhanViens.Count() == 0)
+
+                // Tùy chỉnh hiển thị cột
+                dgvNV.Columns["MaNV"].HeaderText = "Mã NV";
+                dgvNV.Columns["HoTen"].HeaderText = "Họ Tên";
+                dgvNV.Columns["NgaySinh"].HeaderText = "Ngày Sinh";
+                dgvNV.Columns["DiaChi"].HeaderText = "Địa Chỉ";
+                dgvNV.Columns["GioiTinh"].HeaderText = "Giới Tính";
+                dgvNV.Columns["NgayVaoLam"].HeaderText = "Ngày Vào Làm";
+                dgvNV.Columns["SoDienThoai"].HeaderText = "Số Điện Thoại";
+                dgvNV.Columns["ChucVu"].HeaderText = "Chức Vụ";
+                dgvNV.Columns["CCCD"].HeaderText = "CCCD";
+
+                // Bật/tắt nút dựa trên việc có dữ liệu hay không
+                if (!nhanViens.Any())
                 {
                     btnDelete.Enabled = false;
                     btnUpdate.Enabled = false;
@@ -67,87 +60,86 @@ namespace SaleManagementWinApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Lỗi tải danh sách nhân viên");
             }
         }
 
-        private void txtSearchNV_TextChanged(object sender, EventArgs e)
+        private NhanVien GetSelectedNhanVien()
         {
-            var nhanViens = nhanVienRepository.GetNhanVienByKeyword(txtSearchNV.Text);
-            try
+            if (dgvNV.SelectedRows.Count > 0)
             {
-                source = new BindingSource();
-                source.DataSource = nhanViens;
-
-                dgvNV.DataSource = null;
-                dgvNV.DataSource = source;
-                if (nhanViens.Count() == 0)
-                {
-                    btnDelete.Enabled = false;
-                    btnUpdate.Enabled = false;
-                }
-                else
-                {
-                    btnDelete.Enabled = true;
-                    btnUpdate.Enabled = true;
-                }
+                return dgvNV.SelectedRows[0].DataBoundItem as NhanVien;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            return null;
         }
 
-        private void dgvNV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void btnNew_Click(object sender, EventArgs e)
         {
-            btnUpdate_Click(sender, e);
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            try
+            // SỬA: Gọi form frmNhanVienUpdate
+            frmNhanVienUpdate frmNVUpdate = new frmNhanVienUpdate
             {
-                nhanVienRepository.DeleteNhanVien(nv.MaNhanVien);
+                Text = "Thêm mới Nhân Viên",
+                InsertOrUpdate = false // Chế độ Thêm mới
+            };
+
+            if (frmNVUpdate.ShowDialog() == DialogResult.OK)
+            {
                 LoadNhanVienList();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Xóa nhân viên");
+                source.Position = source.Count - 1; // Di chuyển đến dòng mới thêm
             }
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            frmNhanVienUpdate frmNhanVienUpdate = new frmNhanVienUpdate()
+            NhanVien selectedNhanVien = GetSelectedNhanVien();
+            if (selectedNhanVien != null)
             {
-                Text = "Cập nhật Nhân viên",
-                InsertOrUpdate = true,
-                NhanVienInfo = nv,
-                NhanVienRepository = nhanVienRepository
-            };
-            frmNhanVienUpdate.Owner = this;
-            if (frmNhanVienUpdate.ShowDialog() == DialogResult.OK)
+                frmNhanVienUpdate frmNVUpdate = new frmNhanVienUpdate
+                {
+                    Text = "Cập nhật Nhân Viên",
+                    InsertOrUpdate = true, // Chế độ Cập nhật
+                    NhanVienInfo = selectedNhanVien
+                };
+
+                if (frmNVUpdate.ShowDialog() == DialogResult.OK)
+                {
+                    LoadNhanVienList();
+                }
+            }
+            else
             {
-                LoadNhanVienList();
-                source.Position = source.Count - 1;
+                MessageBox.Show("Vui lòng chọn một nhân viên để cập nhật.", "Thông báo");
             }
         }
 
-        private void dgvNV_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Kiểm tra người dùng nếu click vào 1 ô hợp lệ
+            NhanVien selectedNhanVien = GetSelectedNhanVien();
+            if (selectedNhanVien != null)
             {
-                DataGridViewRow row = dgvNV.Rows[e.RowIndex];
-                nv = new NhanVien
+                var confirmResult = MessageBox.Show("Bạn có chắc muốn xóa nhân viên này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirmResult == DialogResult.Yes)
                 {
-                    MaNhanVien = Convert.ToInt32(row.Cells[0].Value),
-                    TenNhanVien = row.Cells[1].Value.ToString(),
-                    GioiTinh = Convert.ToBoolean(row.Cells[2].Value.ToString()),
-                    DiaChi = row.Cells[3].Value.ToString(),
-                    DienThoai = row.Cells[4].Value.ToString(),
-                    NgaySinh = Convert.ToDateTime(row.Cells[5].Value.ToString())
-                };
+                    NhanVienDAL.Instance.Delete(selectedNhanVien.MaNV);
+                    LoadNhanVienList();
+                }
             }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một nhân viên để xóa.", "Thông báo");
+            }
+        }
+
+        private void txtSearchNV_TextChanged(object sender, EventArgs e)
+        {
+            // SỬA: Tối ưu tìm kiếm bằng BindingSource.Filter
+            var searchText = txtSearchNV.Text;
+            source.Filter = $"HoTen LIKE '%{searchText}%' OR SoDienThoai LIKE '%{searchText}%'";
+        }
+
+        private void dgvNV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            btnUpdate_Click(sender, e);
         }
 
         private void btnClose_Click(object sender, EventArgs e)

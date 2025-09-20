@@ -1,6 +1,6 @@
 ﻿namespace SaleManagementWinApp
 {
-    partial class frmNguoiDung
+    partial class frmTaiKhoan
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNguoiDung));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTaiKhoan));
             btnClose = new Button();
             btnDelete = new Button();
             btnUpdate = new Button();
@@ -106,7 +106,7 @@
             dgvND.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvND.Size = new Size(720, 251);
             dgvND.TabIndex = 19;
-            dgvND.CellClick += dgvND_CellClick;
+            //dgvND.CellClick += dgvND_CellClick;
             dgvND.CellDoubleClick += dgvND_CellDoubleClick;
             // 
             // txtSearchND
@@ -136,11 +136,12 @@
             lblQLND.ForeColor = Color.GhostWhite;
             lblQLND.Location = new Point(230, 11);
             lblQLND.Name = "lblQLND";
-            lblQLND.Size = new Size(318, 37);
+            lblQLND.Size = new Size(288, 37);
             lblQLND.TabIndex = 16;
-            lblQLND.Text = "QUẢN LÝ NGƯỜI DÙNG";
+            lblQLND.Text = "QUẢN LÝ TÀI KHOẢN";
+            //lblQLND.Click += this.lblQLND_Click;
             // 
-            // frmNguoiDung
+            // frmTaiKhoan
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -154,10 +155,10 @@
             Controls.Add(txtSearchND);
             Controls.Add(lblKeyword);
             Controls.Add(lblQLND);
-            Name = "frmNguoiDung";
+            Name = "frmTaiKhoan";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmNguoiDung";
-            Load += frmNguoiDung_Load;
+            //Load += frmNguoiDung_Load;
             ((System.ComponentModel.ISupportInitialize)dgvND).EndInit();
             ResumeLayout(false);
             PerformLayout();
