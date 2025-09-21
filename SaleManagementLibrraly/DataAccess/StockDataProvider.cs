@@ -7,16 +7,15 @@ namespace SaleManagementLibrraly.DataAccess
     {
         private string ConnectionString { get; set; }
 
-        // Constructors
         public StockDataProvider() { }
         public StockDataProvider(string connectionString) => ConnectionString = connectionString;
 
         public void CloseConnection(SqlConnection connection) => connection.Close();
 
-        /// <summary>
-        /// Tạo một đối tượng SqlParameter để sử dụng trong các câu lệnh SQL.
-        /// </summary>
-        public SqlParameter CreateParameter(string name, int size, object value, DbType dbType, ParameterDirection direction = ParameterDirection.Input)
+        // =============================================================
+        // HÀM ĐÃ ĐƯỢC NÂNG CẤP
+        // =============================================================
+        public static SqlParameter CreateParameter(string name, int size, object value, DbType dbType, ParameterDirection direction = ParameterDirection.Input)
         {
             return new SqlParameter
             {
@@ -24,14 +23,11 @@ namespace SaleManagementLibrraly.DataAccess
                 ParameterName = name,
                 Size = size,
                 Direction = direction,
-                Value = value
+                // SỬA: Tự động chuyển C# null thành DBNull để đảm bảo an toàn
+                Value = value ?? DBNull.Value
             };
         }
 
-        /// <summary>
-        /// Thực thi một câu lệnh SELECT và trả về một IDataReader.
-        /// Lưu ý: Connection sẽ được giữ mở và cần được đóng thủ công sau khi đọc xong.
-        /// </summary>
         public IDataReader GetDataReader(string commandText, CommandType commandType, out SqlConnection connection, params SqlParameter[] parameters)
         {
             IDataReader reader = null;
@@ -43,20 +39,23 @@ namespace SaleManagementLibrraly.DataAccess
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
-                    command.Parameters.AddRange(parameters);
+                    foreach (var param in parameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
                 }
                 reader = command.ExecuteReader();
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // SỬA: Khi có lỗi, phải ném (throw) lỗi ra ngoài để chúng ta biết
+                // thay vì im lặng và trả về null.
+                throw new Exception("Lỗi từ DataProvider: " + ex.Message);
             }
+            // Dòng "return reader;" sẽ không được chạy nếu có lỗi.
             return reader;
         }
 
-        /// <summary>
-        /// Thực thi một câu lệnh INSERT, UPDATE, hoặc DELETE.
-        /// </summary>
         private void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             try
@@ -67,7 +66,10 @@ namespace SaleManagementLibrraly.DataAccess
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
-                    command.Parameters.AddRange(parameters);
+                    foreach (var param in parameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
                 }
                 command.ExecuteNonQuery();
             }
@@ -77,9 +79,6 @@ namespace SaleManagementLibrraly.DataAccess
             }
         }
 
-        /// <summary>
-        /// Thực thi một câu lệnh và trả về một giá trị duy nhất (ví dụ: lấy ID mới).
-        /// </summary>
         public object ExecuteScalar(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             object result = null;
@@ -91,7 +90,10 @@ namespace SaleManagementLibrraly.DataAccess
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
-                    command.Parameters.AddRange(parameters);
+                    foreach (var param in parameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
                 }
                 result = command.ExecuteScalar();
             }
@@ -101,8 +103,6 @@ namespace SaleManagementLibrraly.DataAccess
             }
             return result;
         }
-
-        // --- CÁC HÀM TIỆN ÍCH CHO INSERT, UPDATE, DELETE ---
 
         public void Insert(string commandText, CommandType commandType, params SqlParameter[] parameters)
             => ExecuteNonQuery(commandText, commandType, parameters);

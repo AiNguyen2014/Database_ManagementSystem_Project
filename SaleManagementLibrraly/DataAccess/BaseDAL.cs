@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
 namespace SaleManagementLibrraly.DataAccess
 {
@@ -27,6 +28,13 @@ namespace SaleManagementLibrraly.DataAccess
             return connectionString;
         }
         //
-        public void CloseConnection() => dataProvider.CloseConnection(connection);
+        public void CloseConnection() 
+        {
+            // Chỉ đóng kết nối nếu nó thực sự đang tồn tại và đang mở
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                dataProvider.CloseConnection(connection);
+            }
+        }
     }
 }

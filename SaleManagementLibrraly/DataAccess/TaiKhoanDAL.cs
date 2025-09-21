@@ -34,8 +34,8 @@ namespace SaleManagementLibrraly.DataAccess
             try
             {
                 var parameters = new List<SqlParameter>();
-                parameters.Add(dataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String));
 
                 dataReader = dataProvider.GetDataReader(SQLSelect, CommandType.Text, out connection, parameters.ToArray());
                 if (dataReader.Read())
@@ -73,7 +73,7 @@ namespace SaleManagementLibrraly.DataAccess
             string SQLSelect = "SELECT MaTaiKhoan, TenDangNhap FROM TaiKhoan WHERE TenDangNhap = @TenDangNhap";
             try
             {
-                var param = dataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String);
+                var param = StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String);
                 dataReader = dataProvider.GetDataReader(SQLSelect, CommandType.Text, out connection, param);
                 if (dataReader.Read())
                 {
@@ -139,11 +139,11 @@ namespace SaleManagementLibrraly.DataAccess
                 // Giả định TenDangNhap là duy nhất và đã được kiểm tra trước khi gọi hàm này
                 string sqlInsert = "INSERT INTO TaiKhoan (TenDangNhap, MatKhau, VaiTro, MaNV, MaKH) VALUES (@TenDangNhap, @MatKhau, @VaiTro, @MaNV, @MaKH)";
                 var parameters = new List<SqlParameter>();
-                parameters.Add(dataProvider.CreateParameter("@TenDangNhap", 50, taiKhoan.TenDangNhap, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@MatKhau", 50, taiKhoan.MatKhau, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@VaiTro", 50, taiKhoan.VaiTro, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@MaNV", 4, taiKhoan.MaNV ?? (object)DBNull.Value, DbType.Int32));
-                parameters.Add(dataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32));
+                parameters.Add(StockDataProvider.CreateParameter("@TenDangNhap", 50, taiKhoan.TenDangNhap, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@MatKhau", 50, taiKhoan.MatKhau, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@VaiTro", 50, taiKhoan.VaiTro, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@MaNV", 4, taiKhoan.MaNV ?? (object)DBNull.Value, DbType.Int32));
+                parameters.Add(StockDataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32));
 
                 dataProvider.Insert(sqlInsert, CommandType.Text, parameters.ToArray());
             }
@@ -164,12 +164,12 @@ namespace SaleManagementLibrraly.DataAccess
             {
                 string sqlUpdate = "UPDATE TaiKhoan SET TenDangNhap = @TenDangNhap, MatKhau = @MatKhau, VaiTro = @VaiTro, MaNV = @MaNV, MaKH = @MaKH WHERE MaTaiKhoan = @MaTaiKhoan";
                 var parameters = new List<SqlParameter>();
-                parameters.Add(dataProvider.CreateParameter("@MaTaiKhoan", 4, taiKhoan.MaTaiKhoan, DbType.Int32));
-                parameters.Add(dataProvider.CreateParameter("@TenDangNhap", 50, taiKhoan.TenDangNhap, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@MatKhau", 50, taiKhoan.MatKhau, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@VaiTro", 50, taiKhoan.VaiTro, DbType.String));
-                parameters.Add(dataProvider.CreateParameter("@MaNV", 4, taiKhoan.MaNV ?? (object)DBNull.Value, DbType.Int32));
-                parameters.Add(dataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32));
+                parameters.Add(StockDataProvider.CreateParameter("@MaTaiKhoan", 4, taiKhoan.MaTaiKhoan, DbType.Int32));
+                parameters.Add(StockDataProvider.CreateParameter("@TenDangNhap", 50, taiKhoan.TenDangNhap, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@MatKhau", 50, taiKhoan.MatKhau, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@VaiTro", 50, taiKhoan.VaiTro, DbType.String));
+                parameters.Add(StockDataProvider.CreateParameter("@MaNV", 4, taiKhoan.MaNV ?? (object)DBNull.Value, DbType.Int32));
+                parameters.Add(StockDataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32));
 
                 dataProvider.Update(sqlUpdate, CommandType.Text, parameters.ToArray());
             }
@@ -189,12 +189,35 @@ namespace SaleManagementLibrraly.DataAccess
             try
             {
                 string sqlDelete = "DELETE FROM TaiKhoan WHERE MaTaiKhoan = @MaTaiKhoan";
-                var param = dataProvider.CreateParameter("@MaTaiKhoan", 4, maTaiKhoan, DbType.Int32);
+                var param = StockDataProvider.CreateParameter("@MaTaiKhoan", 4, maTaiKhoan, DbType.Int32);
                 dataProvider.Delete(sqlDelete, CommandType.Text, param);
             }
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi xóa tài khoản: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        // HÀM ĐỔI MẬT KHẨU
+        public void ChangePassword(string tenDangNhap, string matKhauMoi)
+        {
+            try
+            {
+                string sqlCommand = "sp_TaiKhoan_ChangePassword";
+                var parameters = new List<SqlParameter>
+        {
+            StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String),
+            StockDataProvider.CreateParameter("@MatKhauMoi", 50, matKhauMoi, DbType.String)
+        };
+                dataProvider.Update(sqlCommand, CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi đổi mật khẩu: " + ex.Message);
             }
             finally
             {

@@ -1,16 +1,13 @@
 ﻿using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.DataAccess; // SỬA: Dùng DataAccess
+using SaleManagementLibrraly.DataAccess;
 using System;
-using System.Globalization;
 using System.Windows.Forms;
 
 namespace SaleManagementWinApp
 {
     public partial class frmNhanVienUpdate : Form
     {
-        // KHÔNG CẦN Repository nữa
-        // public INhanVienRepository NhanVienRepository { get; set; }
-        public bool InsertOrUpdate { get; set; } // true = update, false = insert
+        public bool InsertOrUpdate { get; set; } // true = update
         public NhanVien NhanVienInfo { get; set; }
 
         public frmNhanVienUpdate()
@@ -20,41 +17,39 @@ namespace SaleManagementWinApp
 
         private void frmNhanVienUpdate_Load(object sender, EventArgs e)
         {
+            cboChucVu.SelectedIndex = 0; // Mặc định chọn chức vụ đầu tiên
+
             // Nếu là chế độ Cập nhật, đổ dữ liệu của nhân viên vào các ô
             if (InsertOrUpdate == true)
             {
                 txtMaNV.Text = NhanVienInfo.MaNV.ToString();
-                // SỬA: Dùng đúng tên thuộc tính mới
                 txtTenNV.Text = NhanVienInfo.HoTen;
-                // SỬA: Chuyển đổi từ string "Nam"/"Nữ" sang boolean của CheckBox
-                chkGioiTinh.Checked = NhanVienInfo.GioiTinh.Equals("Nam");
+                dtpNgaySinh.Value = NhanVienInfo.NgaySinh;
                 txtDiaChiNV.Text = NhanVienInfo.DiaChi;
                 txtDienThoaiNV.Text = NhanVienInfo.SoDienThoai;
-                dtpNgaySinh.Value = NhanVienInfo.NgaySinh;
                 dtpNgayVaoLam.Value = NhanVienInfo.NgayVaoLam;
                 txtCCCD.Text = NhanVienInfo.CCCD;
                 cboChucVu.SelectedItem = NhanVienInfo.ChucVu;
+                chkGioiTinh.Checked = NhanVienInfo.GioiTinh.Equals("Nam");
             }
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e) // Nút này có thể đổi tên thành btnSave
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
             {
-                // TODO: Thêm kiểm tra dữ liệu đầu vào (không được để trống...)
+                // TODO: Thêm kiểm tra dữ liệu đầu vào chi tiết hơn
 
                 var nv = new NhanVien
                 {
-                    // SỬA: Dùng đúng tên thuộc tính từ Model mới
                     HoTen = txtTenNV.Text,
+                    NgaySinh = dtpNgaySinh.Value,
                     DiaChi = txtDiaChiNV.Text,
                     SoDienThoai = txtDienThoaiNV.Text,
-                    // SỬA: Chuyển từ CheckBox (boolean) sang string "Nam"/"Nữ"
-                    GioiTinh = chkGioiTinh.Checked ? "Nam" : "Nữ",
-                    NgaySinh = dtpNgaySinh.Value,
                     NgayVaoLam = dtpNgayVaoLam.Value,
                     CCCD = txtCCCD.Text,
-                    ChucVu = cboChucVu.SelectedItem.ToString()
+                    ChucVu = cboChucVu.SelectedItem.ToString(),
+                    GioiTinh = chkGioiTinh.Checked ? "Nam" : "Nữ"
                 };
 
                 if (InsertOrUpdate == false) // Chế độ Insert
@@ -64,12 +59,11 @@ namespace SaleManagementWinApp
                 }
                 else // Chế độ Update
                 {
-                    nv.MaNV = int.Parse(txtMaNV.Text); // Lấy MaNV để biết update dòng nào
+                    nv.MaNV = int.Parse(txtMaNV.Text);
                     NhanVienDAL.Instance.Update(nv);
                     MessageBox.Show("Cập nhật nhân viên thành công!", "Thông báo");
                 }
 
-                // SỬA: Giao tiếp với form cha một cách mềm dẻo hơn
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

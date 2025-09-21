@@ -2,15 +2,8 @@
 {
     partial class frmNhanVienUpdate
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,234 +15,265 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNhanVienUpdate));
-            btnClose = new Button();
-            btnUpdate = new Button();
-            txtDienThoaiNV = new MaskedTextBox();
-            txtDiaChiNV = new TextBox();
-            txtTenNV = new TextBox();
-            txtMaNV = new TextBox();
-            lblDienThoai = new Label();
-            lblDiaChi = new Label();
-            lblTenNV = new Label();
-            lblMaNV = new Label();
-            lblCNKH = new Label();
-            txtNgaySinhNV = new MaskedTextBox();
-            label1 = new Label();
-            lblGioiTinh = new Label();
-            chkGioiTinh = new CheckBox();
-            SuspendLayout();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblMaNV = new System.Windows.Forms.Label();
+            this.txtMaNV = new System.Windows.Forms.TextBox();
+            this.txtTenNV = new System.Windows.Forms.TextBox();
+            this.lblTenNV = new System.Windows.Forms.Label();
+            this.txtDiaChiNV = new System.Windows.Forms.TextBox();
+            this.lblDiaChi = new System.Windows.Forms.Label();
+            this.txtDienThoaiNV = new System.Windows.Forms.TextBox();
+            this.lblDienThoai = new System.Windows.Forms.Label();
+            this.lblNgaySinh = new System.Windows.Forms.Label();
+            this.dtpNgaySinh = new System.Windows.Forms.DateTimePicker();
+            this.lblGioiTinh = new System.Windows.Forms.Label();
+            this.chkGioiTinh = new System.Windows.Forms.CheckBox();
+            this.lblNgayVaoLam = new System.Windows.Forms.Label();
+            this.dtpNgayVaoLam = new System.Windows.Forms.DateTimePicker();
+            this.txtCCCD = new System.Windows.Forms.TextBox();
+            this.lblCCCD = new System.Windows.Forms.Label();
+            this.lblChucVu = new System.Windows.Forms.Label();
+            this.cboChucVu = new System.Windows.Forms.ComboBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.SuspendLayout();
             // 
-            // btnClose
+            // lblTitle
             // 
-            btnClose.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
-            btnClose.ForeColor = Color.Purple;
-            btnClose.Image = (Image)resources.GetObject("btnClose.Image");
-            btnClose.Location = new Point(321, 350);
-            btnClose.Name = "btnClose";
-            btnClose.Size = new Size(117, 41);
-            btnClose.TabIndex = 7;
-            btnClose.Text = "Thoát";
-            btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnClose.UseVisualStyleBackColor = true;
-            btnClose.Click += btnClose_Click;
-            // 
-            // btnUpdate
-            // 
-            btnUpdate.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
-            btnUpdate.ForeColor = Color.Purple;
-            btnUpdate.Image = (Image)resources.GetObject("btnUpdate.Image");
-            btnUpdate.Location = new Point(148, 350);
-            btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new Size(140, 41);
-            btnUpdate.TabIndex = 6;
-            btnUpdate.Text = "Cập nhật";
-            btnUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnUpdate.UseVisualStyleBackColor = true;
-            btnUpdate.Click += btnUpdate_Click;
-            // 
-            // txtDienThoaiNV
-            // 
-            txtDienThoaiNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtDienThoaiNV.Location = new Point(148, 208);
-            txtDienThoaiNV.Mask = "(84)00.000.0000";
-            txtDienThoaiNV.Name = "txtDienThoaiNV";
-            txtDienThoaiNV.Size = new Size(290, 30);
-            txtDienThoaiNV.TabIndex = 3;
-            // 
-            // txtDiaChiNV
-            // 
-            txtDiaChiNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtDiaChiNV.Location = new Point(148, 164);
-            txtDiaChiNV.Name = "txtDiaChiNV";
-            txtDiaChiNV.Size = new Size(290, 30);
-            txtDiaChiNV.TabIndex = 2;
-            // 
-            // txtTenNV
-            // 
-            txtTenNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtTenNV.Location = new Point(148, 123);
-            txtTenNV.Name = "txtTenNV";
-            txtTenNV.Size = new Size(290, 30);
-            txtTenNV.TabIndex = 1;
-            // 
-            // txtMaNV
-            // 
-            txtMaNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtMaNV.Location = new Point(148, 82);
-            txtMaNV.Name = "txtMaNV";
-            txtMaNV.ReadOnly = true;
-            txtMaNV.Size = new Size(290, 30);
-            txtMaNV.TabIndex = 100;
-            // 
-            // lblDienThoai
-            // 
-            lblDienThoai.AutoSize = true;
-            lblDienThoai.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblDienThoai.ForeColor = Color.GhostWhite;
-            lblDienThoai.Location = new Point(14, 209);
-            lblDienThoai.Name = "lblDienThoai";
-            lblDienThoai.Size = new Size(111, 23);
-            lblDienThoai.TabIndex = 16;
-            lblDienThoai.Text = "Số điện thoại";
-            // 
-            // lblDiaChi
-            // 
-            lblDiaChi.AutoSize = true;
-            lblDiaChi.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblDiaChi.ForeColor = Color.GhostWhite;
-            lblDiaChi.Location = new Point(14, 164);
-            lblDiaChi.Name = "lblDiaChi";
-            lblDiaChi.Size = new Size(65, 23);
-            lblDiaChi.TabIndex = 15;
-            lblDiaChi.Text = "Địa Chỉ";
-            // 
-            // lblTenNV
-            // 
-            lblTenNV.AutoSize = true;
-            lblTenNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblTenNV.ForeColor = Color.GhostWhite;
-            lblTenNV.Location = new Point(14, 123);
-            lblTenNV.Name = "lblTenNV";
-            lblTenNV.Size = new Size(116, 23);
-            lblTenNV.TabIndex = 14;
-            lblTenNV.Text = "Tên nhân viên";
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(80, 20);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(312, 37);
+            this.lblTitle.Text = "CẬP NHẬT NHÂN VIÊN";
             // 
             // lblMaNV
             // 
-            lblMaNV.AutoSize = true;
-            lblMaNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblMaNV.ForeColor = Color.GhostWhite;
-            lblMaNV.Location = new Point(14, 85);
-            lblMaNV.Name = "lblMaNV";
-            lblMaNV.Size = new Size(114, 23);
-            lblMaNV.TabIndex = 13;
-            lblMaNV.Text = "Mã nhân viên";
+            this.lblMaNV.AutoSize = true;
+            this.lblMaNV.ForeColor = System.Drawing.Color.White;
+            this.lblMaNV.Location = new System.Drawing.Point(40, 90);
+            this.lblMaNV.Name = "lblMaNV";
+            this.lblMaNV.Size = new System.Drawing.Size(97, 20);
+            this.lblMaNV.Text = "Mã nhân viên";
             // 
-            // lblCNKH
+            // txtMaNV
             // 
-            lblCNKH.AutoSize = true;
-            lblCNKH.Font = new Font("Segoe UI", 16F, FontStyle.Bold, GraphicsUnit.Point);
-            lblCNKH.ForeColor = Color.GhostWhite;
-            lblCNKH.Location = new Point(68, 23);
-            lblCNKH.Name = "lblCNKH";
-            lblCNKH.Size = new Size(312, 37);
-            lblCNKH.TabIndex = 12;
-            lblCNKH.Text = "CẬP NHẬT NHÂN VIÊN";
+            this.txtMaNV.Location = new System.Drawing.Point(160, 87);
+            this.txtMaNV.Name = "txtMaNV";
+            this.txtMaNV.ReadOnly = true;
+            this.txtMaNV.Size = new System.Drawing.Size(280, 27);
             // 
-            // txtNgaySinhNV
+            // txtTenNV
             // 
-            txtNgaySinhNV.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtNgaySinhNV.Location = new Point(148, 253);
-            txtNgaySinhNV.Mask = "00/00/0000";
-            txtNgaySinhNV.Name = "txtNgaySinhNV";
-            txtNgaySinhNV.Size = new Size(290, 30);
-            txtNgaySinhNV.TabIndex = 4;
-            txtNgaySinhNV.ValidatingType = typeof(DateTime);
+            this.txtTenNV.Location = new System.Drawing.Point(160, 127);
+            this.txtTenNV.Name = "txtTenNV";
+            this.txtTenNV.Size = new System.Drawing.Size(280, 27);
             // 
-            // label1
+            // lblTenNV
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.ForeColor = Color.GhostWhite;
-            label1.Location = new Point(14, 254);
-            label1.Name = "label1";
-            label1.Size = new Size(86, 23);
-            label1.TabIndex = 23;
-            label1.Text = "Ngày sinh";
+            this.lblTenNV.AutoSize = true;
+            this.lblTenNV.ForeColor = System.Drawing.Color.White;
+            this.lblTenNV.Location = new System.Drawing.Point(40, 130);
+            this.lblTenNV.Name = "lblTenNV";
+            this.lblTenNV.Size = new System.Drawing.Size(99, 20);
+            this.lblTenNV.Text = "Tên nhân viên";
+            // 
+            // txtDiaChiNV
+            // 
+            this.txtDiaChiNV.Location = new System.Drawing.Point(160, 207);
+            this.txtDiaChiNV.Name = "txtDiaChiNV";
+            this.txtDiaChiNV.Size = new System.Drawing.Size(280, 27);
+            // 
+            // lblDiaChi
+            // 
+            this.lblDiaChi.AutoSize = true;
+            this.lblDiaChi.ForeColor = System.Drawing.Color.White;
+            this.lblDiaChi.Location = new System.Drawing.Point(40, 210);
+            this.lblDiaChi.Name = "lblDiaChi";
+            this.lblDiaChi.Size = new System.Drawing.Size(55, 20);
+            this.lblDiaChi.Text = "Địa chỉ";
+            // 
+            // txtDienThoaiNV
+            // 
+            this.txtDienThoaiNV.Location = new System.Drawing.Point(160, 247);
+            this.txtDienThoaiNV.Name = "txtDienThoaiNV";
+            this.txtDienThoaiNV.Size = new System.Drawing.Size(280, 27);
+            // 
+            // lblDienThoai
+            // 
+            this.lblDienThoai.AutoSize = true;
+            this.lblDienThoai.ForeColor = System.Drawing.Color.White;
+            this.lblDienThoai.Location = new System.Drawing.Point(40, 250);
+            this.lblDienThoai.Name = "lblDienThoai";
+            this.lblDienThoai.Size = new System.Drawing.Size(97, 20);
+            this.lblDienThoai.Text = "Số điện thoại";
+            // 
+            // lblNgaySinh
+            // 
+            this.lblNgaySinh.AutoSize = true;
+            this.lblNgaySinh.ForeColor = System.Drawing.Color.White;
+            this.lblNgaySinh.Location = new System.Drawing.Point(40, 173);
+            this.lblNgaySinh.Name = "lblNgaySinh";
+            this.lblNgaySinh.Size = new System.Drawing.Size(74, 20);
+            this.lblNgaySinh.Text = "Ngày sinh";
+            // 
+            // dtpNgaySinh
+            // 
+            this.dtpNgaySinh.CustomFormat = "dd/MM/yyyy";
+            this.dtpNgaySinh.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpNgaySinh.Location = new System.Drawing.Point(160, 168);
+            this.dtpNgaySinh.Name = "dtpNgaySinh";
+            this.dtpNgaySinh.Size = new System.Drawing.Size(280, 27);
             // 
             // lblGioiTinh
             // 
-            lblGioiTinh.AutoSize = true;
-            lblGioiTinh.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblGioiTinh.ForeColor = Color.GhostWhite;
-            lblGioiTinh.Location = new Point(14, 299);
-            lblGioiTinh.Name = "lblGioiTinh";
-            lblGioiTinh.Size = new Size(78, 23);
-            lblGioiTinh.TabIndex = 24;
-            lblGioiTinh.Text = "Giới Tính";
+            this.lblGioiTinh.AutoSize = true;
+            this.lblGioiTinh.ForeColor = System.Drawing.Color.White;
+            this.lblGioiTinh.Location = new System.Drawing.Point(40, 410);
+            this.lblGioiTinh.Name = "lblGioiTinh";
+            this.lblGioiTinh.Size = new System.Drawing.Size(65, 20);
+            this.lblGioiTinh.Text = "Giới tính";
             // 
             // chkGioiTinh
             // 
-            chkGioiTinh.AutoSize = true;
-            chkGioiTinh.Location = new Point(149, 300);
-            chkGioiTinh.Name = "chkGioiTinh";
-            chkGioiTinh.Size = new Size(63, 24);
-            chkGioiTinh.TabIndex = 5;
-            chkGioiTinh.Text = "Nam";
-            chkGioiTinh.UseVisualStyleBackColor = true;
+            this.chkGioiTinh.AutoSize = true;
+            this.chkGioiTinh.ForeColor = System.Drawing.Color.White;
+            this.chkGioiTinh.Location = new System.Drawing.Point(160, 409);
+            this.chkGioiTinh.Name = "chkGioiTinh";
+            this.chkGioiTinh.Size = new System.Drawing.Size(63, 24);
+            this.chkGioiTinh.Text = "Nam";
+            this.chkGioiTinh.UseVisualStyleBackColor = true;
+            // 
+            // lblNgayVaoLam
+            // 
+            this.lblNgayVaoLam.AutoSize = true;
+            this.lblNgayVaoLam.ForeColor = System.Drawing.Color.White;
+            this.lblNgayVaoLam.Location = new System.Drawing.Point(40, 290);
+            this.lblNgayVaoLam.Name = "lblNgayVaoLam";
+            this.lblNgayVaoLam.Size = new System.Drawing.Size(98, 20);
+            this.lblNgayVaoLam.Text = "Ngày vào làm";
+            // 
+            // dtpNgayVaoLam
+            // 
+            this.dtpNgayVaoLam.CustomFormat = "dd/MM/yyyy";
+            this.dtpNgayVaoLam.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpNgayVaoLam.Location = new System.Drawing.Point(160, 285);
+            this.dtpNgayVaoLam.Name = "dtpNgayVaoLam";
+            this.dtpNgayVaoLam.Size = new System.Drawing.Size(280, 27);
+            // 
+            // txtCCCD
+            // 
+            this.txtCCCD.Location = new System.Drawing.Point(160, 327);
+            this.txtCCCD.Name = "txtCCCD";
+            this.txtCCCD.Size = new System.Drawing.Size(280, 27);
+            // 
+            // lblCCCD
+            // 
+            this.lblCCCD.AutoSize = true;
+            this.lblCCCD.ForeColor = System.Drawing.Color.White;
+            this.lblCCCD.Location = new System.Drawing.Point(40, 330);
+            this.lblCCCD.Name = "lblCCCD";
+            this.lblCCCD.Size = new System.Drawing.Size(47, 20);
+            this.lblCCCD.Text = "CCCD";
+            // 
+            // lblChucVu
+            // 
+            this.lblChucVu.AutoSize = true;
+            this.lblChucVu.ForeColor = System.Drawing.Color.White;
+            this.lblChucVu.Location = new System.Drawing.Point(40, 370);
+            this.lblChucVu.Name = "lblChucVu";
+            this.lblChucVu.Size = new System.Drawing.Size(61, 20);
+            this.lblChucVu.Text = "Chức vụ";
+            // 
+            // cboChucVu
+            // 
+            this.cboChucVu.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboChucVu.FormattingEnabled = true;
+            this.cboChucVu.Items.AddRange(new object[] { "Nhân viên bán hàng", "Nhân viên kho" });
+            this.cboChucVu.Location = new System.Drawing.Point(160, 367);
+            this.cboChucVu.Name = "cboChucVu";
+            this.cboChucVu.Size = new System.Drawing.Size(280, 28);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(110, 460);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(120, 40);
+            this.btnUpdate.Text = "Lưu";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.Location = new System.Drawing.Point(288, 460);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(120, 40);
+            this.btnClose.Text = "Thoát";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // frmNhanVienUpdate
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.DarkBlue;
-            ClientSize = new Size(472, 413);
-            Controls.Add(chkGioiTinh);
-            Controls.Add(lblGioiTinh);
-            Controls.Add(txtNgaySinhNV);
-            Controls.Add(label1);
-            Controls.Add(btnClose);
-            Controls.Add(btnUpdate);
-            Controls.Add(txtDienThoaiNV);
-            Controls.Add(txtDiaChiNV);
-            Controls.Add(txtTenNV);
-            Controls.Add(txtMaNV);
-            Controls.Add(lblDienThoai);
-            Controls.Add(lblDiaChi);
-            Controls.Add(lblTenNV);
-            Controls.Add(lblMaNV);
-            Controls.Add(lblCNKH);
-            Name = "frmNhanVienUpdate";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Nhân Viên Update";
-            Load += frmNhanVienUpdate_Load;
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.DarkBlue;
+            this.ClientSize = new System.Drawing.Size(482, 523);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.btnUpdate);
+            this.Controls.Add(this.cboChucVu);
+            this.Controls.Add(this.lblChucVu);
+            this.Controls.Add(this.txtCCCD);
+            this.Controls.Add(this.lblCCCD);
+            this.Controls.Add(this.dtpNgayVaoLam);
+            this.Controls.Add(this.lblNgayVaoLam);
+            this.Controls.Add(this.chkGioiTinh);
+            this.Controls.Add(this.lblGioiTinh);
+            this.Controls.Add(this.dtpNgaySinh);
+            this.Controls.Add(this.lblNgaySinh);
+            this.Controls.Add(this.txtDienThoaiNV);
+            this.Controls.Add(this.lblDienThoai);
+            this.Controls.Add(this.txtDiaChiNV);
+            this.Controls.Add(this.lblDiaChi);
+            this.Controls.Add(this.txtTenNV);
+            this.Controls.Add(this.lblTenNV);
+            this.Controls.Add(this.txtMaNV);
+            this.Controls.Add(this.lblMaNV);
+            this.Controls.Add(this.lblTitle);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.Name = "frmNhanVienUpdate";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Cập nhật nhân viên";
+            this.Load += new System.EventHandler(this.frmNhanVienUpdate_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
         }
 
         #endregion
 
-        private Button btnClose;
-        private Button btnUpdate;
-        private MaskedTextBox txtDienThoaiNV;
-        private TextBox txtDiaChiNV;
-        private TextBox txtTenNV;
-        private TextBox txtMaNV;
-        private Label lblDienThoai;
-        private Label lblDiaChi;
-        private Label lblTenNV;
-        private Label lblMaNV;
-        private Label lblCNKH;
-        private MaskedTextBox txtNgaySinhNV;
-        private Label label1;
-        private Label lblGioiTinh;
-        private CheckBox chkGioiTinh;
+        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblMaNV;
+        private System.Windows.Forms.TextBox txtMaNV;
+        private System.Windows.Forms.TextBox txtTenNV;
+        private System.Windows.Forms.Label lblTenNV;
+        private System.Windows.Forms.TextBox txtDiaChiNV;
+        private System.Windows.Forms.Label lblDiaChi;
+        private System.Windows.Forms.TextBox txtDienThoaiNV;
+        private System.Windows.Forms.Label lblDienThoai;
+        private System.Windows.Forms.Label lblNgaySinh;
+        private System.Windows.Forms.DateTimePicker dtpNgaySinh;
+        private System.Windows.Forms.Label lblGioiTinh;
+        private System.Windows.Forms.CheckBox chkGioiTinh;
+        private System.Windows.Forms.Label lblNgayVaoLam;
+        private System.Windows.Forms.DateTimePicker dtpNgayVaoLam;
+        private System.Windows.Forms.TextBox txtCCCD;
+        private System.Windows.Forms.Label lblCCCD;
+        private System.Windows.Forms.Label lblChucVu;
+        private System.Windows.Forms.ComboBox cboChucVu;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnClose;
     }
 }

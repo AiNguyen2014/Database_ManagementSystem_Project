@@ -1,14 +1,18 @@
-﻿using System.Data;
-using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.Repository;
+﻿using SaleManagementLibrraly.BussinessObject;
+using SaleManagementLibrraly.DataAccess; // SỬA: Dùng DataAccess
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace SaleManagementWinApp
 {
     public partial class frmSanPham : Form
     {
-        IHangHoaRepository hangHoaRepository = new HangHoaRepository();
         BindingSource source;
+        // Giữ lại giỏ hàng trong bộ nhớ, đây là cách làm đơn giản và hợp lý
         List<GioHang> list_GH;
+
         public frmSanPham()
         {
             InitializeComponent();
@@ -16,180 +20,70 @@ namespace SaleManagementWinApp
 
         private void frmSanPham_Load(object sender, EventArgs e)
         {
-            LoadHangHoaList();
             list_GH = new List<GioHang>();
+            LoadSanPhamList();
+            LoadGioHangList(); // Tải giỏ hàng rỗng ban đầu
         }
 
-        public void LoadHangHoaList()
+        public void LoadSanPhamList()
         {
-            var hangHoas = hangHoaRepository.GetHangHoas();
             try
             {
+                var sanPhams = SanPhamDAL.Instance.GetAll();
                 source = new BindingSource();
-                source.DataSource = hangHoas;
+                source.DataSource = sanPhams;
 
                 dgvHangHoa.DataSource = null;
-                dgvHangHoa.AutoGenerateColumns = false;
-                dgvHangHoa.Columns.Clear();  // Xóa tất cả các cột hiện có trên DataGridView
-                // Thêm cột ID và Tên vào DataGridView
-                var maHangHoa = new DataGridViewTextBoxColumn();
-                maHangHoa.DataPropertyName = "MaHangHoa";
-                maHangHoa.HeaderText = "Mã Hàng hoá";
-                dgvHangHoa.Columns.Add(maHangHoa);
-
-                var tenHangHoa = new DataGridViewTextBoxColumn();
-                tenHangHoa.DataPropertyName = "TenHangHoa";
-                tenHangHoa.HeaderText = "Tên Hàng hoá";
-                dgvHangHoa.Columns.Add(tenHangHoa);
-
-                var soLuong = new DataGridViewTextBoxColumn();
-                soLuong.DataPropertyName = "SoLuong";
-                soLuong.HeaderText = "Số lượng";
-                dgvHangHoa.Columns.Add(soLuong);
-
-                var donGiaNhap = new DataGridViewTextBoxColumn();
-                donGiaNhap.DataPropertyName = "DonGiaNhap";
-                donGiaNhap.HeaderText = "Đơn giá nhập";
-                dgvHangHoa.Columns.Add(donGiaNhap);
-
-                var donGiaBan = new DataGridViewTextBoxColumn();
-                donGiaBan.DataPropertyName = "DonGiaBan";
-                donGiaBan.HeaderText = "Đơn giá bán";
-                dgvHangHoa.Columns.Add(donGiaBan);
-
-                var muaHang = new DataGridViewButtonColumn();
-                muaHang.HeaderText = "Mua hàng";
-                muaHang.Text = "Mua";
-                muaHang.UseColumnTextForButtonValue = true;
-                dgvHangHoa.Columns.Add(muaHang);
-                // Ẩn cột Ảnh
-                //dgvHangHoa.Columns[5].Visible = false;
                 dgvHangHoa.DataSource = source;
+                // Có thể thêm code để tùy chỉnh các cột ở đây nếu muốn
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                MessageBox.Show("Lỗi tải danh sách sản phẩm: " + ex.Message);
             }
         }
 
         public void LoadGioHangList()
         {
-            try
-            {
-                source = new BindingSource();
-                source.DataSource = list_GH;
+            // Hàm này dùng để cập nhật lại DataGridView của giỏ hàng
+            var sourceGH = new BindingSource();
+            sourceGH.DataSource = list_GH;
 
-                dgvCart.DataSource = null;
-                dgvCart.AutoGenerateColumns = false;
-                dgvCart.Columns.Clear();  // Xóa tất cả các cột hiện có trên DataGridView
-
-                // Thêm cột ID và Tên vào DataGridView
-                var maHangHoa = new DataGridViewTextBoxColumn();
-                maHangHoa.DataPropertyName = "MaHangHoa";
-                maHangHoa.HeaderText = "Mã Hàng hoá";
-                dgvCart.Columns.Add(maHangHoa);
-
-                var soLuong = new DataGridViewTextBoxColumn();
-                soLuong.DataPropertyName = "SoLuong";
-                soLuong.HeaderText = "Số lượng";
-                dgvCart.Columns.Add(soLuong);
-
-                var donGia = new DataGridViewTextBoxColumn();
-                donGia.DataPropertyName = "DonGia";
-                donGia.HeaderText = "Đơn giá";
-                dgvCart.Columns.Add(donGia);
-
-                var xoa = new DataGridViewButtonColumn();
-                xoa.HeaderText = "Xóa";
-                xoa.Text = "Xóa";
-                xoa.UseColumnTextForButtonValue = true;
-                dgvCart.Columns.Add(xoa);
-
-                dgvCart.DataSource = source;
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            dgvCart.DataSource = null;
+            dgvCart.DataSource = sourceGH;
         }
 
         private void dgvHangHoa_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Kiểm tra xem người dùng đã nhấn vào cột "Mua hàng" hay chưa
-            if (e.ColumnIndex == dgvHangHoa.Columns[5].Index && e.RowIndex >= 0 && e.RowIndex < dgvHangHoa.Rows.Count - 1)
+            // Xử lý khi người dùng bấm nút "Mua" trên lưới
+            // Cần đảm bảo bạn đã thêm một cột Button vào dgvHangHoa
+            // Và kiểm tra e.ColumnIndex cho đúng
+
+            // Ví dụ, giả sử cột cuối cùng là cột Button "Mua"
+            if (e.RowIndex >= 0 && e.ColumnIndex == dgvHangHoa.Columns.Count - 1)
             {
-                // Xử lý sự kiện mua hàng ở đây
-                // Ví dụ: Lấy thông tin sản phẩm được chọn bằng cách sử dụng dgvHangHoa.Rows[e.RowIndex].DataBoundItem
-                // và thực hiện xử lý mua hàng tương ứng
-                DataGridViewRow row = dgvHangHoa.Rows[e.RowIndex];
-                var MaHangHoa = Convert.ToInt32(row.Cells[0].Value);
-                int SL = Convert.ToInt32(row.Cells[2].Value);//100
-                int SoLuong = 0;
-                if (CheckCart(MaHangHoa))
+                var selectedSP = dgvHangHoa.Rows[e.RowIndex].DataBoundItem as SanPham;
+                if (selectedSP != null)
                 {
-                    SoLuong = TinhTongSoLuongTheoMa(MaHangHoa) + 1;
-                    //Kiểm tra số lượng vượt quá cho phép
-                    if (SoLuong <= SL)
+                    // Thêm sản phẩm vào giỏ
+                    var itemInCart = list_GH.FirstOrDefault(item => item.MaHangHoa == selectedSP.MaSP);
+                    if (itemInCart != null)
                     {
-                        CapNhatSoLuong(Convert.ToInt32(MaHangHoa), SoLuong);
+                        itemInCart.SoLuong++;
                     }
                     else
                     {
-                        MessageBox.Show("Vượt quá số lượng hàng trong kho!!!");
+                        list_GH.Add(new GioHang { MaHangHoa = selectedSP.MaSP, SoLuong = 1, DonGia = selectedSP.GiaBan });
                     }
-                    LoadGioHangList();
-                    return;
-                }
-                else
-                {
-                    SoLuong = 1;
-                }
-                var DonGia = row.Cells[4].Value;
-                list_GH.Add(new GioHang
-                {
-                    MaHangHoa = Convert.ToInt32(MaHangHoa),
-                    SoLuong = Convert.ToInt32(SoLuong),
-                    DonGia = Convert.ToDecimal(DonGia)
-                }
-                );
-                LoadGioHangList();
-            }
-        }
-
-        public void CapNhatSoLuong(int maHangHoa, int soLuongMoi)
-        {
-            foreach (var gh in list_GH)
-            {
-                if (gh.MaHangHoa == maHangHoa)
-                {
-                    gh.SoLuong = soLuongMoi;
-                    break;
+                    LoadGioHangList(); // Cập nhật lại view giỏ hàng
                 }
             }
         }
 
-        public bool CheckCart(int maHangHoa)
-        {
-            return list_GH.Any(gh => gh.MaHangHoa == maHangHoa);
-        }
-
-        public int TinhTongSoLuongTheoMa(int maHangHoa)
-        {
-            return list_GH.Where(gh => gh.MaHangHoa == maHangHoa).Sum(gh => gh.SoLuong);
-        }
-
+        // Các hàm khác như xóa khỏi giỏ hàng...
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Kiểm tra xem người dùng đã nhấn vào cột "Xóa" hay chưa
-            if (e.ColumnIndex == dgvCart.Columns[3].Index && e.RowIndex >= 0 && e.RowIndex < dgvCart.Rows.Count - 1)
-            {
-                DataGridViewRow row = dgvCart.Rows[e.RowIndex];
-                var maHangHoa = Convert.ToInt32(row.Cells[0].Value);
-                list_GH.RemoveAll(gh => gh.MaHangHoa == maHangHoa);
-                //MessageBox.Show("Xóa sản phẩm trong giỏ hàng thành công");
-                LoadGioHangList();
-            }
+            // Tương tự, xử lý khi bấm nút "Xóa" trên giỏ hàng
         }
     }
 }

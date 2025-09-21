@@ -50,10 +50,10 @@ namespace SaleManagementLibrraly.App.Code
                 {
                     System.IO.Directory.CreateDirectory(LogPath);
                 }
-                CLogger TestLogger = new CLogger();
-                TestLogger.Initialize(LogPath, "DotNet.log", 2);
-                TestLogger.LogInformation(sPage, sFunction, sMessage);
-                TestLogger.Terminate();
+                //CLogger TestLogger = new CLogger();
+                //TestLogger.Initialize(LogPath, "DotNet.log", 2);
+                //TestLogger.LogInformation(sPage, sFunction, sMessage);
+               //TestLogger.Terminate();
             }
             catch (Exception)
             {

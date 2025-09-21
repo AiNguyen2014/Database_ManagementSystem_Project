@@ -106,7 +106,7 @@
             dgvNV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvNV.Size = new Size(720, 251);
             dgvNV.TabIndex = 11;
-            dgvNV.CellClick += dgvNV_CellClick;
+            //dgvNV.CellClick += dgvNV_CellClick;
             dgvNV.CellDoubleClick += dgvNV_CellDoubleClick;
             // 
             // txtSearchNV
@@ -139,7 +139,7 @@
             lblQLNV.Size = new Size(291, 37);
             lblQLNV.TabIndex = 8;
             lblQLNV.Text = "QUẢN LÝ NHÂN VIÊN";
-            lblQLNV.Click += lblQLNV_Click;
+            //lblQLNV.Click += lblQLNV_Click;
             // 
             // frmNhanVien
             // 

@@ -31,7 +31,6 @@ namespace SaleManagementWinApp
 
                 errorProvider1?.Clear();
 
-                // SỬA: Gọi trực tiếp hàm CheckLogin từ TaiKhoanDAL
                 TaiKhoan taiKhoan = TaiKhoanDAL.Instance.CheckLogin(txtDangNhap.Text, txtMatKhau.Text);
 
                 if (taiKhoan != null) // Nếu tìm thấy tài khoản
@@ -40,7 +39,7 @@ namespace SaleManagementWinApp
 
                     MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // SỬA: Kiểm tra vai trò bằng chuỗi (string), không dùng số
+
                     if (taiKhoan.VaiTro.Equals("NhanVien", StringComparison.OrdinalIgnoreCase))
                     {
                         // Mở form chính cho nhân viên/quản trị
@@ -49,10 +48,10 @@ namespace SaleManagementWinApp
                     }
                     else if (taiKhoan.VaiTro.Equals("KhachHang", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Mở form cho khách hàng
-                        frmMainKhachHang f_main_kh = new frmMainKhachHang();
-                        // Nếu cần truyền thông tin khách hàng sang form chính thì làm ở đây
-                        // f_main_kh.ThongTinKhachHang = khachHang; 
+                        frmMainKhachHang f_main_kh = new frmMainKhachHang
+                        {
+                            LoggedInAccount = taiKhoan // Gán thông tin tài khoản vào property của form main
+                        };
                         f_main_kh.ShowDialog();
                     }
                     this.Close(); // Sau khi form chính đóng, đóng luôn form login

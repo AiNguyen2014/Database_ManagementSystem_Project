@@ -1,6 +1,6 @@
 ﻿namespace SaleManagementWinApp
 {
-    partial class frmHangHoa
+    partial class frmQuanLySanPham
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHangHoa));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmQuanLySanPham));
             btnClose = new Button();
             btnDelete = new Button();
             btnUpdate = new Button();
@@ -52,7 +52,7 @@
             btnClose.Text = "Thoát";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = true;
-            btnClose.Click += btnClose_Click;
+            //btnClose.Click += btnClose_Click;
             // 
             // btnDelete
             // 
@@ -66,7 +66,7 @@
             btnDelete.Text = "Xóa";
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDelete.UseVisualStyleBackColor = true;
-            btnDelete.Click += btnDelete_Click;
+            //btnDelete.Click += btnDelete_Click;
             // 
             // btnUpdate
             // 
@@ -106,7 +106,7 @@
             dgvHH.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvHH.Size = new Size(720, 251);
             dgvHH.TabIndex = 11;
-            dgvHH.CellClick += dgvHH_CellClick;
+            //dgvHH.CellClick += dgvHH_CellClick;
             dgvHH.CellDoubleClick += dgvHH_CellDoubleClick;
             // 
             // txtSearchHH
@@ -157,7 +157,7 @@
             Controls.Add(lblQLHH);
             Name = "frmHangHoa";
             Text = "Hàng hóa";
-            Load += frmHangHoa_Load;
+           // Load += frmHangHoa_Load;
             ((System.ComponentModel.ISupportInitialize)dgvHH).EndInit();
             ResumeLayout(false);
             PerformLayout();

@@ -76,14 +76,14 @@ namespace SaleManagementLibrraly.DataAccess
                 string sqlInsert = "INSERT INTO NhanVien (HoTen, NgaySinh, DiaChi, GioiTinh, NgayVaoLam, SoDienThoai, ChucVu, CCCD) VALUES (@HoTen, @NgaySinh, @DiaChi, @GioiTinh, @NgayVaoLam, @SoDienThoai, @ChucVu, @CCCD)";
                 var parameters = new List<SqlParameter>
                 {
-                    dataProvider.CreateParameter("@HoTen", 100, nv.HoTen, DbType.String),
-                    dataProvider.CreateParameter("@NgaySinh", 0, nv.NgaySinh, DbType.Date),
-                    dataProvider.CreateParameter("@DiaChi", 300, nv.DiaChi, DbType.String),
-                    dataProvider.CreateParameter("@GioiTinh", 5, nv.GioiTinh, DbType.String),
-                    dataProvider.CreateParameter("@NgayVaoLam", 0, nv.NgayVaoLam, DbType.Date),
-                    dataProvider.CreateParameter("@SoDienThoai", 15, nv.SoDienThoai, DbType.String),
-                    dataProvider.CreateParameter("@ChucVu", 50, nv.ChucVu, DbType.String),
-                    dataProvider.CreateParameter("@CCCD", 20, nv.CCCD, DbType.String)
+                    StockDataProvider.CreateParameter("@HoTen", 100, nv.HoTen, DbType.String),
+                    StockDataProvider.CreateParameter("@NgaySinh", 0, nv.NgaySinh, DbType.Date),
+                    StockDataProvider.CreateParameter("@DiaChi", 300, nv.DiaChi, DbType.String),
+                    StockDataProvider.CreateParameter("@GioiTinh", 5, nv.GioiTinh, DbType.String),
+                    StockDataProvider.CreateParameter("@NgayVaoLam", 0, nv.NgayVaoLam, DbType.Date),
+                    StockDataProvider.CreateParameter("@SoDienThoai", 15, nv.SoDienThoai, DbType.String),
+                    StockDataProvider.CreateParameter("@ChucVu", 50, nv.ChucVu, DbType.String),
+                    StockDataProvider.CreateParameter("@CCCD", 20, nv.CCCD, DbType.String)
                 };
                 dataProvider.Insert(sqlInsert, CommandType.Text, parameters.ToArray());
             }
@@ -104,15 +104,15 @@ namespace SaleManagementLibrraly.DataAccess
                 string sqlUpdate = "UPDATE NhanVien SET HoTen=@HoTen, NgaySinh=@NgaySinh, DiaChi=@DiaChi, GioiTinh=@GioiTinh, NgayVaoLam=@NgayVaoLam, SoDienThoai=@SoDienThoai, ChucVu=@ChucVu, CCCD=@CCCD WHERE MaNV = @MaNV";
                 var parameters = new List<SqlParameter>
                 {
-                    dataProvider.CreateParameter("@MaNV", 0, nv.MaNV, DbType.Int32),
-                    dataProvider.CreateParameter("@HoTen", 100, nv.HoTen, DbType.String),
-                    dataProvider.CreateParameter("@NgaySinh", 0, nv.NgaySinh, DbType.Date),
-                    dataProvider.CreateParameter("@DiaChi", 300, nv.DiaChi, DbType.String),
-                    dataProvider.CreateParameter("@GioiTinh", 5, nv.GioiTinh, DbType.String),
-                    dataProvider.CreateParameter("@NgayVaoLam", 0, nv.NgayVaoLam, DbType.Date),
-                    dataProvider.CreateParameter("@SoDienThoai", 15, nv.SoDienThoai, DbType.String),
-                    dataProvider.CreateParameter("@ChucVu", 50, nv.ChucVu, DbType.String),
-                    dataProvider.CreateParameter("@CCCD", 20, nv.CCCD, DbType.String)
+                    StockDataProvider.CreateParameter("@MaNV", 0, nv.MaNV, DbType.Int32),
+                    StockDataProvider.CreateParameter("@HoTen", 100, nv.HoTen, DbType.String),
+                    StockDataProvider.CreateParameter("@NgaySinh", 0, nv.NgaySinh, DbType.Date),
+                    StockDataProvider.CreateParameter("@DiaChi", 300, nv.DiaChi, DbType.String),
+                    StockDataProvider.CreateParameter("@GioiTinh", 5, nv.GioiTinh, DbType.String),
+                    StockDataProvider.CreateParameter("@NgayVaoLam", 0, nv.NgayVaoLam, DbType.Date),
+                    StockDataProvider.CreateParameter("@SoDienThoai", 15, nv.SoDienThoai, DbType.String),
+                    StockDataProvider.CreateParameter("@ChucVu", 50, nv.ChucVu, DbType.String),
+                    StockDataProvider.CreateParameter("@CCCD", 20, nv.CCCD, DbType.String)
                 };
                 dataProvider.Update(sqlUpdate, CommandType.Text, parameters.ToArray());
             }
@@ -131,7 +131,7 @@ namespace SaleManagementLibrraly.DataAccess
             try
             {
                 string sqlDelete = "DELETE FROM NhanVien WHERE MaNV = @MaNV";
-                var param = dataProvider.CreateParameter("@MaNV", 4, maNV, DbType.Int32);
+                var param = StockDataProvider.CreateParameter("@MaNV", 4, maNV, DbType.Int32);
                 dataProvider.Delete(sqlDelete, CommandType.Text, param);
             }
             catch (Exception ex)

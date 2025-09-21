@@ -157,7 +157,7 @@
             Controls.Add(lblQLND);
             Name = "frmTaiKhoan";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "frmNguoiDung";
+            Text = "Quản Lý Tài Khoản";
             //Load += frmNguoiDung_Load;
             ((System.ComponentModel.ISupportInitialize)dgvND).EndInit();
             ResumeLayout(false);

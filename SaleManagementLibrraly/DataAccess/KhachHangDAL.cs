@@ -75,7 +75,7 @@ namespace SaleManagementLibrraly.DataAccess
             string SQLSelect = "SELECT MaKH, Hoten, DiaChi, GioiTinh, SoDienThoai FROM KhachHang WHERE SoDienThoai = @SoDienThoai";
             try
             {
-                var param = dataProvider.CreateParameter("@SoDienThoai", 20, soDienThoai, DbType.String);
+                var param = StockDataProvider.CreateParameter("@SoDienThoai", 20, soDienThoai, DbType.String);
                 dataReader = dataProvider.GetDataReader(SQLSelect, CommandType.Text, out connection, param);
                 if (dataReader.Read())
                 {
@@ -111,10 +111,10 @@ namespace SaleManagementLibrraly.DataAccess
                 string sqlInsert = "INSERT INTO KhachHang (Hoten, DiaChi, GioiTinh, SoDienThoai) VALUES (@Hoten, @DiaChi, @GioiTinh, @SoDienThoai); SELECT SCOPE_IDENTITY();";
                 var parameters = new List<SqlParameter>
                 {
-                    dataProvider.CreateParameter("@Hoten", 100, kh.Hoten, DbType.String),
-                    dataProvider.CreateParameter("@DiaChi", 255, kh.DiaChi, DbType.String),
-                    dataProvider.CreateParameter("@GioiTinh", 10, kh.GioiTinh, DbType.String),
-                    dataProvider.CreateParameter("@SoDienThoai", 20, kh.SoDienThoai, DbType.String)
+                    StockDataProvider.CreateParameter("@Hoten", 100, kh.Hoten, DbType.String),
+                    StockDataProvider.CreateParameter("@DiaChi", 255, kh.DiaChi, DbType.String),
+                    StockDataProvider.CreateParameter("@GioiTinh", 10, kh.GioiTinh, DbType.String),
+                    StockDataProvider.CreateParameter("@SoDienThoai", 20, kh.SoDienThoai, DbType.String)
                 };
 
                 object newId = dataProvider.ExecuteScalar(sqlInsert, CommandType.Text, parameters.ToArray());
@@ -140,11 +140,11 @@ namespace SaleManagementLibrraly.DataAccess
                 string sqlUpdate = "UPDATE KhachHang SET Hoten = @Hoten, DiaChi = @DiaChi, GioiTinh = @GioiTinh, SoDienThoai = @SoDienThoai WHERE MaKH = @MaKH";
                 var parameters = new List<SqlParameter>
                 {
-                    dataProvider.CreateParameter("@MaKH", 4, kh.MaKH, DbType.Int32),
-                    dataProvider.CreateParameter("@Hoten", 100, kh.Hoten, DbType.String),
-                    dataProvider.CreateParameter("@DiaChi", 255, kh.DiaChi, DbType.String),
-                    dataProvider.CreateParameter("@GioiTinh", 10, kh.GioiTinh, DbType.String),
-                    dataProvider.CreateParameter("@SoDienThoai", 20, kh.SoDienThoai, DbType.String)
+                    StockDataProvider.CreateParameter("@MaKH", 4, kh.MaKH, DbType.Int32),
+                    StockDataProvider.CreateParameter("@Hoten", 100, kh.Hoten, DbType.String),
+                    StockDataProvider.CreateParameter("@DiaChi", 255, kh.DiaChi, DbType.String),
+                    StockDataProvider.CreateParameter("@GioiTinh", 10, kh.GioiTinh, DbType.String),
+                    StockDataProvider.CreateParameter("@SoDienThoai", 20, kh.SoDienThoai, DbType.String)
                 };
 
                 dataProvider.Update(sqlUpdate, CommandType.Text, parameters.ToArray());
@@ -167,7 +167,7 @@ namespace SaleManagementLibrraly.DataAccess
             try
             {
                 string sqlDelete = "DELETE FROM KhachHang WHERE MaKH = @MaKH";
-                var param = dataProvider.CreateParameter("@MaKH", 4, maKH, DbType.Int32);
+                var param = StockDataProvider.CreateParameter("@MaKH", 4, maKH, DbType.Int32);
                 dataProvider.Delete(sqlDelete, CommandType.Text, param);
             }
             catch (Exception ex)
@@ -180,6 +180,100 @@ namespace SaleManagementLibrraly.DataAccess
             }
         }
 
+        // HÀM LẤY LỊCH SỬ MUA HÀNG
+        public IEnumerable<HoaDon> GetLichSuMuaHang(int maKH)
+        {
+            IDataReader dataReader = null;
+            var listHoaDon = new List<HoaDon>();
+            // Tên của procedure trong SQL Server
+            string commandText = "sp_KhachHang_GetLichSuMuaHang";
+
+            try
+            {
+                var param = StockDataProvider.CreateParameter("@MaKH", 4, maKH, DbType.Int32);
+                // Đổi CommandType thành StoredProcedure
+                dataReader = dataProvider.GetDataReader(commandText, CommandType.StoredProcedure, out connection, param);
+
+                while (dataReader.Read())
+                {
+                    listHoaDon.Add(new HoaDon
+                    {
+                        MaHD = dataReader.GetInt32(0),
+                        NgayLap = dataReader.GetDateTime(1),
+                        TongTien = dataReader.IsDBNull(2) ? (decimal?)null : dataReader.GetDecimal(2)
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy lịch sử mua hàng: " + ex.Message);
+            }
+            finally
+            {
+                if (dataReader != null) dataReader.Close();
+                CloseConnection();
+            }
+            return listHoaDon;
+        }
+
+        // HÀM CẬP NHẬT THÔNG TIN CÁ NHÂN
+        public void UpdateThongTin(KhachHang kh)
+        {
+            try
+            {
+                string sqlCommand = "sp_KhachHang_UpdateThongTin";
+                var parameters = new List<SqlParameter>
+        {
+            StockDataProvider.CreateParameter("@MaKH", 4, kh.MaKH, DbType.Int32),
+            StockDataProvider.CreateParameter("@HoTen", 100, kh.Hoten, DbType.String),
+            StockDataProvider.CreateParameter("@DiaChi", 255, kh.DiaChi, DbType.String),
+            StockDataProvider.CreateParameter("@SoDienThoai", 20, kh.SoDienThoai, DbType.String)
+        };
+                dataProvider.Update(sqlCommand, CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi cập nhật thông tin khách hàng: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        //Hàm lấy khách hàng theo ID
+        public KhachHang GetKhachHangByID(int maKH)
+        {
+            KhachHang kh = null;
+            IDataReader dataReader = null;
+            string SQLSelect = "SELECT MaKH, Hoten, DiaChi, GioiTinh, SoDienThoai FROM KhachHang WHERE MaKH = @MaKH";
+            try
+            {
+                var param = StockDataProvider.CreateParameter("@MaKH", 4, maKH, DbType.Int32);
+                dataReader = dataProvider.GetDataReader(SQLSelect, CommandType.Text, out connection, param);
+                if (dataReader.Read())
+                {
+                    kh = new KhachHang
+                    {
+                        MaKH = dataReader.GetInt32(0),
+                        Hoten = dataReader.GetString(1),
+                        DiaChi = dataReader.GetString(2),
+                        GioiTinh = dataReader.GetString(3),
+                        SoDienThoai = dataReader.GetString(4)
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi tìm khách hàng bằng ID: " + ex.Message);
+            }
+            finally
+            {
+                if (dataReader != null) dataReader.Close();
+                CloseConnection();
+            }
+            return kh;
+        }
 
     }
 }

@@ -28,7 +28,7 @@
   
 
   <ItemGroup>
-    <Compile Update="frmHangHoaUpdate.cs">
+    <Compile Update="frmSanPhamUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="frmKhachHangUpdate.cs">

@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
             menuStrip1 = new MenuStrip();
-            tệpTinToolStripMenuItem = new ToolStripMenuItem();
+            mnuFile = new ToolStripMenuItem();
             mnuThoat = new ToolStripMenuItem();
             mnuSanPham = new ToolStripMenuItem();
             mnuChao = new ToolStripMenuItem();
             mnuDangXuat = new ToolStripMenuItem();
+            mnuThongTinCaNhan = new ToolStripMenuItem();
+            mnuLichSuMuaHang = new ToolStripMenuItem();
+            đăngXuấtToolStripMenuItem = new ToolStripMenuItem();
+            thoátToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -41,20 +45,20 @@
             // 
             menuStrip1.BackColor = Color.DarkBlue;
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { tệpTinToolStripMenuItem, mnuSanPham, mnuChao });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { mnuFile, mnuSanPham, mnuChao });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(912, 28);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
-            // tệpTinToolStripMenuItem
+            // mnuFile
             // 
-            tệpTinToolStripMenuItem.BackColor = Color.SkyBlue;
-            tệpTinToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mnuThoat });
-            tệpTinToolStripMenuItem.Name = "tệpTinToolStripMenuItem";
-            tệpTinToolStripMenuItem.Size = new Size(69, 24);
-            tệpTinToolStripMenuItem.Text = "Tệp tin";
+            mnuFile.BackColor = Color.SkyBlue;
+            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuThoat, mnuThongTinCaNhan, mnuLichSuMuaHang, đăngXuấtToolStripMenuItem, thoátToolStripMenuItem });
+            mnuFile.Name = "mnuFile";
+            mnuFile.Size = new Size(69, 24);
+            mnuFile.Text = "Tệp tin";
             // 
             // mnuThoat
             // 
@@ -69,7 +73,6 @@
             mnuSanPham.Name = "mnuSanPham";
             mnuSanPham.Size = new Size(89, 24);
             mnuSanPham.Text = "Sản phẩm";
-            mnuSanPham.Click += mnuSanPham_Click;
             // 
             // mnuChao
             // 
@@ -85,6 +88,30 @@
             mnuDangXuat.Size = new Size(224, 26);
             mnuDangXuat.Text = "Đăng xuất";
             mnuDangXuat.Click += mnuDangXuat_Click;
+            // 
+            // mnuThongTinCaNhan
+            // 
+            mnuThongTinCaNhan.Name = "mnuThongTinCaNhan";
+            mnuThongTinCaNhan.Size = new Size(224, 26);
+            mnuThongTinCaNhan.Text = "Thông tin cá nhân";
+            // 
+            // mnuLichSuMuaHang
+            // 
+            mnuLichSuMuaHang.Name = "mnuLichSuMuaHang";
+            mnuLichSuMuaHang.Size = new Size(224, 26);
+            mnuLichSuMuaHang.Text = "Lịch sử mua hàng";
+            // 
+            // đăngXuấtToolStripMenuItem
+            // 
+            đăngXuấtToolStripMenuItem.Name = "đăngXuấtToolStripMenuItem";
+            đăngXuấtToolStripMenuItem.Size = new Size(224, 26);
+            đăngXuấtToolStripMenuItem.Text = "Đăng xuất";
+            // 
+            // thoátToolStripMenuItem
+            // 
+            thoátToolStripMenuItem.Name = "thoátToolStripMenuItem";
+            thoátToolStripMenuItem.Size = new Size(224, 26);
+            thoátToolStripMenuItem.Text = "Thoát";
             // 
             // frmMainKhachHang
             // 
@@ -107,10 +134,14 @@
         #endregion
 
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem tệpTinToolStripMenuItem;
+        private ToolStripMenuItem mnuFile;
         private ToolStripMenuItem mnuThoat;
         private ToolStripMenuItem mnuSanPham;
         private ToolStripMenuItem mnuChao;
         private ToolStripMenuItem mnuDangXuat;
+        private ToolStripMenuItem mnuThongTinCaNhan;
+        private ToolStripMenuItem mnuLichSuMuaHang;
+        private ToolStripMenuItem đăngXuấtToolStripMenuItem;
+        private ToolStripMenuItem thoátToolStripMenuItem;
     }
 }

@@ -81,7 +81,7 @@
             dgvKH.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvKH.Size = new Size(720, 251);
             dgvKH.TabIndex = 3;
-            dgvKH.CellClick += dgvKH_CellClick;
+            //dgvKH.CellClick += dgvKH_CellClick;
             dgvKH.CellDoubleClick += dgvKH_CellDoubleClick;
             // 
             // btnNew

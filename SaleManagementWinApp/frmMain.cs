@@ -60,12 +60,12 @@ namespace SaleManagementWinApp
         {
             foreach (Form form in this.MdiChildren)
             {
-                if (form.GetType() != typeof(frmHangHoa))
+                if (form.GetType() != typeof(frmQuanLySanPham))
                 {
                     form.Close();
                 }
             }
-            frmHangHoa frmHH = new frmHangHoa();
+            frmQuanLySanPham frmHH = new frmQuanLySanPham();
             frmHH.MdiParent = this;
             frmHH.Show();
         }
