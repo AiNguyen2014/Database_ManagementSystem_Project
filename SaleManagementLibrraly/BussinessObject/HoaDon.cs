@@ -3,7 +3,7 @@ namespace SaleManagementLibrraly.BussinessObject
 {
     public class HoaDon
     {
-        public int MaHD { get; set; }
+        public int? MaHD { get; set; }
         public DateTime NgayLap { get; set; }
         public int? MaKH { get; set; }
         public int? MaNV { get; set; }

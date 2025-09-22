@@ -48,7 +48,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { tệpTinToolStripMenuItem, danhMụcToolStripMenuItem, hóaĐơnToolStripMenuItem, bánHàngToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(875, 28);
+            menuStrip1.Size = new Size(1451, 28);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -76,35 +76,35 @@
             // qLNhânViênToolStripMenuItem
             // 
             qLNhânViênToolStripMenuItem.Name = "qLNhânViênToolStripMenuItem";
-            qLNhânViênToolStripMenuItem.Size = new Size(196, 26);
+            qLNhânViênToolStripMenuItem.Size = new Size(224, 26);
             qLNhânViênToolStripMenuItem.Text = "QL Nhân Viên";
             qLNhânViênToolStripMenuItem.Click += qLNhânViênToolStripMenuItem_Click;
             // 
             // qLKháchHàngToolStripMenuItem
             // 
             qLKháchHàngToolStripMenuItem.Name = "qLKháchHàngToolStripMenuItem";
-            qLKháchHàngToolStripMenuItem.Size = new Size(196, 26);
+            qLKháchHàngToolStripMenuItem.Size = new Size(224, 26);
             qLKháchHàngToolStripMenuItem.Text = "QL Khách Hàng";
             qLKháchHàngToolStripMenuItem.Click += qLKháchHàngToolStripMenuItem_Click;
             // 
             // qLHàngHóaToolStripMenuItem
             // 
             qLHàngHóaToolStripMenuItem.Name = "qLHàngHóaToolStripMenuItem";
-            qLHàngHóaToolStripMenuItem.Size = new Size(196, 26);
+            qLHàngHóaToolStripMenuItem.Size = new Size(224, 26);
             qLHàngHóaToolStripMenuItem.Text = "QL Hàng Hóa";
             qLHàngHóaToolStripMenuItem.Click += qLHàngHóaToolStripMenuItem_Click;
             // 
             // qLNgườiDùngToolStripMenuItem
             // 
             qLNgườiDùngToolStripMenuItem.Name = "qLNgườiDùngToolStripMenuItem";
-            qLNgườiDùngToolStripMenuItem.Size = new Size(196, 26);
+            qLNgườiDùngToolStripMenuItem.Size = new Size(224, 26);
             qLNgườiDùngToolStripMenuItem.Text = "QL Người Dùng";
             qLNgườiDùngToolStripMenuItem.Click += qLNgườiDùngToolStripMenuItem_Click;
             // 
             // qLKhuyếnMãiToolStripMenuItem
             // 
             qLKhuyếnMãiToolStripMenuItem.Name = "qLKhuyếnMãiToolStripMenuItem";
-            qLKhuyếnMãiToolStripMenuItem.Size = new Size(196, 26);
+            qLKhuyếnMãiToolStripMenuItem.Size = new Size(224, 26);
             qLKhuyếnMãiToolStripMenuItem.Text = "QL Khuyến Mãi";
             qLKhuyếnMãiToolStripMenuItem.Click += qLKhuyếnMãiToolStripMenuItem_Click;
             // 
@@ -126,7 +126,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(875, 538);
+            ClientSize = new Size(1451, 633);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "frmMain";

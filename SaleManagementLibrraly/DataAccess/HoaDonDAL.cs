@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SaleManagementLibrraly.BussinessObject;
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SaleManagementLibrraly.DataAccess
@@ -46,22 +48,49 @@ namespace SaleManagementLibrraly.DataAccess
 
                 dataProvider.Insert(procedureName, CommandType.StoredProcedure, parameters.ToArray());
 
-                // Optionally, you can retrieve the output parameter value here if needed
-                // hd.MaHD = (int)parameters[0].Value; // Uncomment if you want to set MaHD in the object
+                // Lấy và gán MaHD từ tham số output
+                var maHDParam = parameters[0];
+                if (maHDParam.Value != DBNull.Value)
+                {
+                    hd.MaHD = Convert.ToInt32(maHDParam.Value);
+                }
+                else
+                {
+                    throw new Exception("Không thể lấy MaHD từ stored procedure.");
+                }
             }
-            catch (Exception ex) { throw new Exception("Lỗi khi thêm hóa đơn: " + ex.Message); }
-            finally { CloseConnection(); }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi thêm hóa đơn: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
-        public int GetLatestMaHD()
+        public DataTable GetLichSuMuaHang(int maKH)
         {
             try
             {
-                string sql = "SELECT MAX(MaHD) FROM HoaDon";
-                return (int)dataProvider.ExecuteScalar(sql, CommandType.Text);
+                string sql = "EXEC sp_KhachHang_GetLichSuMuaHang @MaKH";
+
+                var parameters = new List<SqlParameter>
+                {
+                    StockDataProvider.CreateParameter("@MaKH", sizeof(int), maKH, DbType.Int32)
+                };
+
+                DataTable data = dataProvider.ExecuteQuery(sql, CommandType.Text, parameters.ToArray());
+                return data;
             }
-            catch (Exception ex) { throw new Exception("Lỗi khi lấy MaHD mới nhất: " + ex.Message); }
-            finally { CloseConnection(); }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy lịch sử mua hàng: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }

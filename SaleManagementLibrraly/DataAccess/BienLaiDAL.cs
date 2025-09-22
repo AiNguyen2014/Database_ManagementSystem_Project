@@ -45,6 +45,30 @@ namespace SaleManagementLibrraly.DataAccess
             reader.Close();
             return list;
         }
+        public void CapNhatBienLai(int maHD, string phuongThuc, string trangThai)
+        {
+            try
+            {
+                string procedureName = "sp_CapNhatBienLai";
+                var parameters = new List<SqlParameter>
+                {
+                    StockDataProvider.CreateParameter("@MaHD", 4, maHD, DbType.Int32),
+                    StockDataProvider.CreateParameter("@PhuongThuc", 50, phuongThuc, DbType.String),
+                    StockDataProvider.CreateParameter("@TrangThai", 50, trangThai, DbType.String)
+                };
 
+                dataProvider.Update(procedureName, CommandType.StoredProcedure, parameters.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi cập nhật biên lai: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+        }
     }
 }
+

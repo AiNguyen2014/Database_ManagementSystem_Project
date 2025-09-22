@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SaleManagementLibrraly.BussinessObject;
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SaleManagementLibrraly.DataAccess
@@ -44,6 +46,86 @@ namespace SaleManagementLibrraly.DataAccess
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi thêm chi tiết hóa đơn: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        // Hàm mới để lấy danh sách chi tiết hóa đơn từ view
+        public List<ChiTietHoaDon> GetChiTietHoaDonByMaHD(int maHD)
+        {
+            try
+            {
+                string sql = "SELECT * FROM vw_ChiTietHoaDonDayDu WHERE MaHD = @MaHD";
+                var parameters = new List<SqlParameter>
+                {
+                    StockDataProvider.CreateParameter("@MaHD", 4, maHD, DbType.Int32)
+                };
+
+                var chiTietList = new List<ChiTietHoaDon>();
+                using (var reader = dataProvider.GetDataReader(sql, CommandType.Text, parameters.ToArray()))
+                {
+                    while (reader.Read())
+                    {
+                        chiTietList.Add(new ChiTietHoaDon
+                        {
+                            MaCTHD = reader.GetInt32(reader.GetOrdinal("MaCTHD")),
+                            MaHD = reader.GetInt32(reader.GetOrdinal("MaHD")),
+                            MaSP = reader.GetInt32(reader.GetOrdinal("MaSP")),
+                            SoLuong = reader.GetInt32(reader.GetOrdinal("SoLuong")),
+                            DonGia = reader.GetDecimal(reader.GetOrdinal("DonGia")),
+                            ThanhTienSauGiam = reader.GetDecimal(reader.GetOrdinal("ThanhTienSauGiam")),
+                            NgayLap = reader.GetDateTime(reader.GetOrdinal("NgayLap")),
+                            TenKH = reader["TenKH"].ToString(),
+                            TenNV = reader["TenNV"].ToString(),
+                            TenSanPham = reader["TenSanPham"].ToString(),
+                            GiamGia = reader["GiamGia"] != DBNull.Value ? (decimal?)reader.GetDecimal(reader.GetOrdinal("GiamGia")) : 0,
+                            TongTien = reader["TongTien"] != DBNull.Value ? (decimal?)reader.GetDecimal(reader.GetOrdinal("TongTien")) : 0
+                        });
+                    }
+                }
+                return chiTietList;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy chi tiết hóa đơn: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+        public SanPhamKhuyenMai GetSanPhamKhuyenMai(int maSP)
+        {
+            try
+            {
+                string sql = "SELECT TenSP, GiaBan, GiaTriGiam, GiaSauGiam FROM vw_SanPhamKhuyenMai WHERE MaSP = @MaSP";
+                var parameters = new List<SqlParameter>
+                {
+                    StockDataProvider.CreateParameter("@MaSP", 4, maSP, DbType.Int32)
+                };
+
+                using (var reader = dataProvider.GetDataReader(sql, CommandType.Text, parameters.ToArray()))
+                {
+                    if (reader.Read())
+                    {
+                        return new SanPhamKhuyenMai
+                        {
+                            MaSP = maSP,
+                            TenSP = reader["TenSP"].ToString(),
+                            GiaBan = Convert.ToDecimal(reader["GiaBan"]),
+                            GiaTriGiam = Convert.ToDecimal(reader["GiaTriGiam"]),
+                            GiaSauGiam = Convert.ToDecimal(reader["GiaSauGiam"])
+                        };
+                    }
+                    return null; // Trả về null nếu không tìm thấy
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy thông tin sản phẩm khuyến mãi: " + ex.Message);
             }
             finally
             {

@@ -18,6 +18,7 @@
         private void InitializeComponent()
         {
             pnlTop = new Panel();
+            dateTimePicker1 = new DateTimePicker();
             label4 = new Label();
             label3 = new Label();
             lblTenKH = new Label();
@@ -52,6 +53,7 @@
             // 
             // pnlTop
             // 
+            pnlTop.Controls.Add(dateTimePicker1);
             pnlTop.Controls.Add(label4);
             pnlTop.Controls.Add(label3);
             pnlTop.Controls.Add(lblTenKH);
@@ -62,14 +64,23 @@
             pnlTop.Dock = DockStyle.Top;
             pnlTop.Location = new Point(0, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.Size = new Size(1228, 95);
+            pnlTop.Size = new Size(1379, 95);
             pnlTop.TabIndex = 0;
+            // 
+            // dateTimePicker1
+            // 
+            dateTimePicker1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            dateTimePicker1.Location = new Point(902, 58);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(250, 27);
+            dateTimePicker1.TabIndex = 7;
             // 
             // label4
             // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.ForeColor = SystemColors.ControlLightLight;
-            label4.Location = new Point(680, 58);
+            label4.Location = new Point(831, 58);
             label4.Name = "label4";
             label4.Size = new Size(75, 20);
             label4.TabIndex = 6;
@@ -128,7 +139,7 @@
             lblNhanVien.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblNhanVien.AutoSize = true;
             lblNhanVien.ForeColor = Color.White;
-            lblNhanVien.Location = new Point(680, 16);
+            lblNhanVien.Location = new Point(831, 16);
             lblNhanVien.Name = "lblNhanVien";
             lblNhanVien.Size = new Size(139, 20);
             lblNhanVien.TabIndex = 0;
@@ -236,14 +247,14 @@
             pnlRight.Location = new Point(619, 95);
             pnlRight.Name = "pnlRight";
             pnlRight.Padding = new Padding(10);
-            pnlRight.Size = new Size(609, 577);
+            pnlRight.Size = new Size(760, 577);
             pnlRight.TabIndex = 2;
             // 
             // cboPhuongThuc
             // 
             cboPhuongThuc.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             cboPhuongThuc.FormattingEnabled = true;
-            cboPhuongThuc.Location = new Point(393, 418);
+            cboPhuongThuc.Location = new Point(544, 418);
             cboPhuongThuc.Name = "cboPhuongThuc";
             cboPhuongThuc.Size = new Size(206, 28);
             cboPhuongThuc.TabIndex = 7;
@@ -264,7 +275,7 @@
             btnHuy.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnHuy.BackColor = Color.IndianRed;
             btnHuy.ForeColor = Color.White;
-            btnHuy.Location = new Point(267, 514);
+            btnHuy.Location = new Point(418, 514);
             btnHuy.Name = "btnHuy";
             btnHuy.Size = new Size(150, 50);
             btnHuy.TabIndex = 5;
@@ -276,7 +287,7 @@
             btnThanhToan.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnThanhToan.BackColor = Color.SeaGreen;
             btnThanhToan.ForeColor = Color.White;
-            btnThanhToan.Location = new Point(437, 514);
+            btnThanhToan.Location = new Point(588, 514);
             btnThanhToan.Name = "btnThanhToan";
             btnThanhToan.Size = new Size(160, 50);
             btnThanhToan.TabIndex = 4;
@@ -288,7 +299,7 @@
             lblTongTienValue.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             lblTongTienValue.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
             lblTongTienValue.ForeColor = Color.Yellow;
-            lblTongTienValue.Location = new Point(349, 460);
+            lblTongTienValue.Location = new Point(500, 460);
             lblTongTienValue.Name = "lblTongTienValue";
             lblTongTienValue.Size = new Size(250, 32);
             lblTongTienValue.TabIndex = 3;
@@ -316,7 +327,7 @@
             dgvChiTietHoaDon.Name = "dgvChiTietHoaDon";
             dgvChiTietHoaDon.RowHeadersWidth = 51;
             dgvChiTietHoaDon.RowTemplate.Height = 29;
-            dgvChiTietHoaDon.Size = new Size(589, 362);
+            dgvChiTietHoaDon.Size = new Size(740, 362);
             dgvChiTietHoaDon.TabIndex = 1;
             // 
             // lblChiTietHD
@@ -337,7 +348,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
-            ClientSize = new Size(1228, 672);
+            ClientSize = new Size(1379, 672);
             Controls.Add(pnlRight);
             Controls.Add(pnlLeft);
             Controls.Add(pnlTop);
@@ -386,5 +397,6 @@
         private Label lbPhuongThuc;
         private ComboBox cboPhuongThuc;
         private Label label4;
+        private DateTimePicker dateTimePicker1;
     }
 }

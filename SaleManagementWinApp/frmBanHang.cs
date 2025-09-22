@@ -1,10 +1,11 @@
-﻿using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.DataAccess;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
+using SaleManagementLibrraly.BussinessObject;
+using SaleManagementLibrraly.DataAccess;
 
 namespace SaleManagementWinApp
 {
@@ -100,16 +101,21 @@ namespace SaleManagementWinApp
             dgvSanPham.AutoGenerateColumns = false;
             dgvSanPham.Columns.Clear();
             dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenSP", HeaderText = "Tên Sản Phẩm", Width = 250 });
-            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiaBan", HeaderText = "Giá Bán", Width = 120 });
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiaBan", HeaderText = "Giá Gốc", Width = 100 });
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiaTriGiam", HeaderText = "Giảm Giá", Width = 100 });
+            dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiaSauGiam", HeaderText = "Giá Sau Giảm", Width = 100 });
             dgvSanPham.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoLuongTon", HeaderText = "SL Tồn", Width = 80 });
 
             // Cấu hình cho lưới giỏ hàng (Chi tiết hóa đơn)
             dgvChiTietHoaDon.AutoGenerateColumns = false;
             dgvChiTietHoaDon.Columns.Clear();
-            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MaSP", HeaderText = "Mã SP", ReadOnly = true, Width = 80 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenSanPham", HeaderText = "Tên Sản Phẩm", ReadOnly = true, Width = 200 });
             dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "SoLuong", HeaderText = "Số Lượng", Width = 100 });
-            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DonGia", HeaderText = "Đơn Giá", ReadOnly = true, Width = 120 });
-            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ThanhTien", HeaderText = "Thành Tiền", ReadOnly = true, Width = 150 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DonGia", HeaderText = "Đơn Giá", ReadOnly = true, Width = 100 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "GiamGia", HeaderText = "Giảm Giá", ReadOnly = true, Width = 100 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ThanhTienSauGiam", HeaderText = "Thành Tiền Sau Giảm", ReadOnly = true, Width = 150 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenKH", HeaderText = "Tên KH", ReadOnly = true, Width = 150 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TenNV", HeaderText = "Tên NV", ReadOnly = true, Width = 150 });
         }
         #endregion
 
@@ -162,6 +168,13 @@ namespace SaleManagementWinApp
             }
         }
 
+        // Thêm một phương thức nhỏ để tính toán lại thành tiền cho một dòng, tránh lặp code
+        private void CapNhatThanhTien(ChiTietHoaDon item)
+        {
+            // Thành tiền sau giảm = Số lượng * Đơn giá (đã áp dụng giảm giá)
+            item.ThanhTienSauGiam = item.SoLuong * item.DonGia;
+        }
+
         private void ThemSanPhamVaoGioHang(SanPham sp)
         {
             var itemInCart = gioHang.FirstOrDefault(item => item.MaSP == sp.MaSP);
@@ -169,15 +182,38 @@ namespace SaleManagementWinApp
             if (itemInCart != null)
             {
                 itemInCart.SoLuong++;
+                CapNhatThanhTien(itemInCart);
             }
             else
             {
-                gioHang.Add(new ChiTietHoaDon
+                SanPhamKhuyenMai spKhuyenMai = ChiTietHoaDonDAL.Instance.GetSanPhamKhuyenMai(sp.MaSP);
+
+                decimal donGiaApDung;
+                decimal giamGiaValue;
+
+                if (spKhuyenMai != null)
+                {
+                    // SỬA Ở ĐÂY: Thêm ?? 0 để xử lý trường hợp giá trị có thể là null
+                    donGiaApDung = spKhuyenMai.GiaSauGiam ?? 0;
+                    giamGiaValue = spKhuyenMai.GiaTriGiam ?? 0;
+                }
+                else
+                {
+                    // SỬA Ở ĐÂY: Thêm ?? 0 để phòng trường hợp GiaBan cũng là nullable
+                    donGiaApDung = sp.GiaBan;
+                    giamGiaValue = 0;
+                }
+
+                var newItem = new ChiTietHoaDon
                 {
                     MaSP = sp.MaSP,
+                    TenSanPham = sp.TenSP,
                     SoLuong = 1,
-                    DonGia = sp.GiaBan
-                });
+                    DonGia = donGiaApDung,
+                    GiamGia = giamGiaValue,
+                    ThanhTienSauGiam = donGiaApDung
+                };
+                gioHang.Add(newItem);
             }
 
             RefreshGioHang();
@@ -185,6 +221,42 @@ namespace SaleManagementWinApp
 
         private void dgvChiTietHoaDon_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            // Kiểm tra xem có phải cột "Số Lượng" được sửa không
+            if (e.RowIndex >= 0 && dgvChiTietHoaDon.Columns[e.ColumnIndex].DataPropertyName == "SoLuong")
+            {
+                // Lấy đối tượng ChiTietHoaDon tương ứng với dòng vừa sửa
+                var itemEdited = gioHang[e.RowIndex];
+
+                // Lấy giá trị mới từ ô
+                var cellValue = dgvChiTietHoaDon.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                // Cố gắng chuyển đổi giá trị sang số nguyên
+                if (int.TryParse(cellValue?.ToString(), out int newQuantity))
+                {
+                    if (newQuantity <= 0)
+                    {
+                        // Nếu người dùng nhập số <= 0, hỏi để xóa sản phẩm
+                        var result = MessageBox.Show("Số lượng không hợp lệ. Bạn có muốn xóa sản phẩm này khỏi giỏ hàng không?", "Xác nhận", MessageBoxButtons.YesNo);
+                        if (result == DialogResult.Yes)
+                        {
+                            gioHang.Remove(itemEdited);
+                        }
+                        else
+                        {
+                            // Nếu không xóa, khôi phục lại số lượng cũ
+                            dgvChiTietHoaDon.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = itemEdited.SoLuong;
+                        }
+                    }
+                    else
+                    {
+                        // Nếu số lượng hợp lệ, cập nhật và tính lại thành tiền
+                        itemEdited.SoLuong = newQuantity;
+                        CapNhatThanhTien(itemEdited);
+                    }
+                }
+            }
+
+            // Luôn làm mới giỏ hàng sau khi chỉnh sửa để cập nhật tổng tiền
             RefreshGioHang();
         }
 
@@ -194,8 +266,9 @@ namespace SaleManagementWinApp
             gioHangSource.DataSource = gioHang;
             dgvChiTietHoaDon.DataSource = gioHangSource;
 
-            decimal tongTien = gioHang.Sum(item => item.ThanhTien ?? 0);
-            lblTongTienValue.Text = $"{tongTien:N0} VNĐ";
+            // Tính tổng tiền dựa trên ThanhTienSauGiam từ view
+            decimal tongTien = gioHang.Sum(item => item.ThanhTienSauGiam ?? 0);
+            lblTongTienValue.Text = tongTien > 0 ? $"{tongTien:N0} VNĐ" : "0 VNĐ";
         }
         #endregion
 
@@ -248,26 +321,53 @@ namespace SaleManagementWinApp
 
             try
             {
+                // Tạo đối tượng HoaDon
                 var hoaDon = new HoaDon
                 {
-                    MaHD = (int)(DateTime.Now.Ticks % 1000000000),
                     NgayLap = DateTime.Now,
                     MaKH = khachHangHienTai.MaKH,
-                    MaNV = 1, // Giả định nhân viên đăng nhập
-                    TongTien = gioHang.Sum(item => item.ThanhTien ?? 0)
+                    MaNV = 1 // Giả định nhân viên đăng nhập
                 };
 
+                // Gọi AddNew từ HoaDonDAL để tạo hóa đơn
                 HoaDonDAL.Instance.AddNew(hoaDon);
 
+                // Lấy MaHD từ đối tượng hoaDon
+                int maHD = hoaDon.MaHD ?? throw new Exception("Không thể lấy MaHD sau khi tạo hóa đơn.");
+
+                // Debug để kiểm tra giá trị MaHD
+                MessageBox.Show($"MaHD sau khi tạo hóa đơn: {maHD}");
+
+                // Thêm chi tiết hóa đơn
                 foreach (var item in gioHang)
                 {
-                    item.MaHD = hoaDon.MaHD;
-                    item.MaCTHD = (int)(DateTime.Now.Ticks % 1000000000) + item.MaSP.Value;
-                    ChiTietHoaDonDAL.Instance.AddNew(item);
-                    SanPhamDAL.Instance.UpdateSoLuongTon(item.MaSP.Value, item.SoLuong.Value);
+                    var chiTiet = new ChiTietHoaDon
+                    {
+                        MaHD = maHD,
+                        MaSP = item.MaSP,
+                        SoLuong = item.SoLuong,
+                        DonGia = item.DonGia
+                    };
+                    ChiTietHoaDonDAL.Instance.AddNew(chiTiet);
                 }
 
-                MessageBox.Show($"Tạo hóa đơn {hoaDon.MaHD} thành công!", "Thành công");
+                // Lấy danh sách chi tiết hóa đơn từ view để cập nhật giao diện
+                var chiTietList = ChiTietHoaDonDAL.Instance.GetChiTietHoaDonByMaHD(maHD);
+                if (chiTietList != null && chiTietList.Any())
+                {
+                    gioHang.Clear();
+                    gioHang.AddRange(chiTietList);
+                    RefreshGioHang();
+                }
+                else
+                {
+                    throw new Exception("Không thể lấy chi tiết hóa đơn từ view sau khi thêm.");
+                }
+
+                // Cập nhật biên lai
+                BienLaiDAL.Instance.CapNhatBienLai(maHD, cboPhuongThuc.SelectedValue.ToString(), "Đã thanh toán");
+
+                MessageBox.Show($"Tạo hóa đơn {maHD} thành công!", "Thành công");
                 ClearFormBanHang();
             }
             catch (Exception ex)

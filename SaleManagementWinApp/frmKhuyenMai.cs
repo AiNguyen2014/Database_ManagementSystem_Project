@@ -16,5 +16,10 @@ namespace SaleManagementWinApp
         {
             InitializeComponent();
         }
+
+        private void frmKhuyenMai_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

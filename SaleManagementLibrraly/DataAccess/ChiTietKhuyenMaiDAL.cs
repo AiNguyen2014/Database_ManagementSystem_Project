@@ -6,7 +6,7 @@ using System.Data;
 
 namespace SaleManagementLibrraly.DataAccess
 {
-    public class ChiTietKhuyenMaiDAL
+    public class ChiTietKhuyenMaiDAL : BaseDAL
     {
         private static ChiTietKhuyenMaiDAL instance = null;
         private static readonly object instanceLock = new object();
@@ -79,43 +79,51 @@ namespace SaleManagementLibrraly.DataAccess
             }
         }
 
-        public void AddNew(ChiTietKhuyenMai cthd)
+        public void AddNew(ChiTietKhuyenMai ctkm)
         {
-            string SQL = "INSERT INTO ChiTietKhuyenMai (MaKM, MaSP, GiaTriGiam) VALUES (@MaKM, @MaSP, @GiaTriGiam)";
             try
             {
-                var provider = new StockDataProvider();
-                var parameters = new SqlParameter[]
+                string procedureName = "sp_ThemChiTietKhuyenMai";
+                var parameters = new List<SqlParameter>
                 {
-                    StockDataProvider.CreateParameter("@MaKM", 4, cthd.MaKM, DbType.Int32),
-                    StockDataProvider.CreateParameter("@MaSP", 4, cthd.MaSP, DbType.Int32),
-                    StockDataProvider.CreateParameter("@GiaTriGiam", 15, cthd.GiaTriGiam, DbType.Decimal)
+                    StockDataProvider.CreateParameter("@MaKM", 4, ctkm.MaKM, DbType.Int32),
+                    StockDataProvider.CreateParameter("@MaSP", 4, ctkm.MaSP, DbType.Int32),
+                    StockDataProvider.CreateParameter("@GiaTriGiam", 15, ctkm.GiaTriGiam, DbType.Decimal)
                 };
-                provider.Insert(SQL, CommandType.Text, parameters);
+
+                dataProvider.Insert(procedureName, CommandType.StoredProcedure, parameters.ToArray());
             }
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi thêm chi tiết khuyến mãi: " + ex.Message, ex);
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
-        public void Update(ChiTietKhuyenMai cthd)
+        public void Update(ChiTietKhuyenMai ctkm)
         {
-            string SQL = "UPDATE ChiTietKhuyenMai SET GiaTriGiam = @GiaTriGiam WHERE MaKM = @MaKM AND MaSP = @MaSP";
             try
             {
-                var provider = new StockDataProvider();
-                var parameters = new SqlParameter[]
+                string procedureName = "sp_SuaChiTietKhuyenMai";
+                var parameters = new List<SqlParameter>
                 {
-                    StockDataProvider.CreateParameter("@GiaTriGiam", 15, cthd.GiaTriGiam, DbType.Decimal),
-                    StockDataProvider.CreateParameter("@MaKM", 4, cthd.MaKM, DbType.Int32),
-                    StockDataProvider.CreateParameter("@MaSP", 4, cthd.MaSP, DbType.Int32)
+                    StockDataProvider.CreateParameter("@MaKM", 4, ctkm.MaKM, DbType.Int32),
+                    StockDataProvider.CreateParameter("@MaSP", 4, ctkm.MaSP, DbType.Int32),
+                    StockDataProvider.CreateParameter("@GiaTriGiam", 15, ctkm.GiaTriGiam, DbType.Decimal)
                 };
-                provider.Update(SQL, CommandType.Text, parameters);
+
+                dataProvider.Update(procedureName, CommandType.StoredProcedure, parameters.ToArray());
             }
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi cập nhật chi tiết khuyến mãi: " + ex.Message, ex);
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 

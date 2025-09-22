@@ -90,6 +90,28 @@ namespace SaleManagementLibrraly.DataAccess
             result = command.ExecuteScalar();
             return result ?? DBNull.Value;
         }
+        public DataTable ExecuteQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters);
+                    }
+
+                    using (var adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(table);
+                    }
+                }
+            }
+            return table;
+        }
 
         public void Insert(string commandText, CommandType commandType, params SqlParameter[] parameters)
             => ExecuteNonQuery(commandText, commandType, parameters);
