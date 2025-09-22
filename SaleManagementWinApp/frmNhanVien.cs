@@ -146,5 +146,10 @@ namespace SaleManagementWinApp
         {
             this.Close();
         }
+
+        private void dgvNV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

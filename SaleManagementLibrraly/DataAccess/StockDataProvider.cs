@@ -14,6 +14,7 @@ namespace SaleManagementLibrraly.DataAccess
                 Password=Project123;
               TrustServerCertificate=True";
 
+
         private static SqlConnection? connection;
 
         // Hàm lấy connection (mở nếu chưa mở)
