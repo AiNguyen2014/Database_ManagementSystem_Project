@@ -44,7 +44,7 @@
             btnDelete.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnDelete.ForeColor = Color.Purple;
             btnDelete.Image = (Image)resources.GetObject("btnDelete.Image");
-            btnDelete.Location = new Point(599, 409);
+            btnDelete.Location = new Point(586, 509);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(124, 41);
             btnDelete.TabIndex = 22;
@@ -57,7 +57,7 @@
             btnUpdate.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnUpdate.ForeColor = Color.Purple;
             btnUpdate.Image = (Image)resources.GetObject("btnUpdate.Image");
-            btnUpdate.Location = new Point(327, 409);
+            btnUpdate.Location = new Point(314, 509);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new Size(140, 41);
             btnUpdate.TabIndex = 21;
@@ -70,7 +70,7 @@
             btnNew.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnNew.ForeColor = Color.Purple;
             btnNew.Image = (Image)resources.GetObject("btnNew.Image");
-            btnNew.Location = new Point(77, 409);
+            btnNew.Location = new Point(64, 509);
             btnNew.Name = "btnNew";
             btnNew.Size = new Size(140, 41);
             btnNew.TabIndex = 20;
@@ -81,12 +81,12 @@
             // dgvNV
             // 
             dgvNV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvNV.Location = new Point(36, 127);
+            dgvNV.Location = new Point(32, 127);
             dgvNV.Name = "dgvNV";
             dgvNV.RowHeadersWidth = 51;
             dgvNV.RowTemplate.Height = 29;
             dgvNV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvNV.Size = new Size(720, 251);
+            dgvNV.Size = new Size(800, 355);
             dgvNV.TabIndex = 19;
             dgvNV.CellContentClick += dgvNV_CellContentClick;
             // 
@@ -133,7 +133,7 @@
             Controls.Add(lblKeyword);
             Controls.Add(lblQLNV);
             Name = "ucNhanVienManager";
-            Size = new Size(792, 470);
+            Size = new Size(859, 601);
             ((System.ComponentModel.ISupportInitialize)dgvNV).EndInit();
             ResumeLayout(false);
             PerformLayout();

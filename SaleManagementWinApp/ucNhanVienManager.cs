@@ -15,8 +15,6 @@ namespace SaleManagementWinApp
     public partial class ucNhanVienManager : UserControl
     {
 
-            // KHÔNG DÙNG Repository nữa
-            // INhanVienRepository nhanVienRepository = new NhanVienRepository();
             BindingSource source;
             public NhanVien CurrentNhanVien { get; set; }
             public ucNhanVienManager()
@@ -50,7 +48,6 @@ namespace SaleManagementWinApp
                     dgvNV.Columns["GioiTinh"].HeaderText = "Giới Tính";
                     dgvNV.Columns["NgayVaoLam"].HeaderText = "Ngày Vào Làm";
                     dgvNV.Columns["SoDienThoai"].HeaderText = "Số Điện Thoại";
-                    dgvNV.Columns["ChucVu"].HeaderText = "Chức Vụ";
                     dgvNV.Columns["CCCD"].HeaderText = "CCCD";
 
                     // Bật/tắt nút dựa trên việc có dữ liệu hay không

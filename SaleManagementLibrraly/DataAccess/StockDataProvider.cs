@@ -8,11 +8,7 @@ namespace SaleManagementLibrraly.DataAccess
     public class StockDataProvider
     {
         private static readonly string connectionString =
-            @"Data Source=192.168.2.3,1433;
-              Initial Catalog=QuanLyCuaHangBachHoa;
-              User ID=DBMSProject;
-                Password=Project123;
-              TrustServerCertificate=True";
+            @"Data Source=LAPTOP-O8J1ULHM;Initial Catalog=QLCH;Integrated Security=True; TrustServerCertificate=True";
 
 
         private static SqlConnection? connection;

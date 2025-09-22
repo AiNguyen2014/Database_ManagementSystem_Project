@@ -1,15 +1,19 @@
 ﻿using SaleManagementLibrraly.BussinessObject;
 using SaleManagementLibrraly.DataAccess;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SaleManagementWinApp
 {
     public partial class frmMainNhanVien : Form
     {
-
         public TaiKhoan LoggedInAccount { get; set; }
         private NhanVien currentNhanVien;
+
+        // BIẾN MỚI: Dùng để lưu trữ tất cả các tab gốc từ Designer
+        private List<TabPage> originalTabPages;
 
         public frmMainNhanVien()
         {
@@ -20,13 +24,19 @@ namespace SaleManagementWinApp
         {
             try
             {
+                // Lưu lại danh sách các tab gốc trước khi làm bất cứ điều gì
+                if (originalTabPages == null)
+                {
+                    originalTabPages = tabControl1.TabPages.Cast<TabPage>().ToList();
+                }
+
                 if (LoggedInAccount != null && LoggedInAccount.MaNV.HasValue)
                 {
                     currentNhanVien = NhanVienDAL.Instance.GetNhanVienByID(LoggedInAccount.MaNV.Value);
                     if (currentNhanVien != null)
                     {
-                        this.Text = $"Nhân viên: {currentNhanVien.HoTen} ({currentNhanVien.ChucVu})";
-                        PhanQuyenTabs(currentNhanVien.ChucVu);
+                        this.Text = $"Nhân viên: {currentNhanVien.HoTen} ({LoggedInAccount.TenVaiTro})";
+                        PhanQuyenTabs(LoggedInAccount.TenVaiTro);
                         TruyenThongTinVaoUserControls();
                     }
                 }
@@ -37,20 +47,25 @@ namespace SaleManagementWinApp
             }
         }
 
-        private void PhanQuyenTabs(string chucVu)
+        // SỬA LẠI HOÀN TOÀN PHƯƠNG THỨC NÀY
+        private void PhanQuyenTabs(string tenVaiTro)
         {
-            // Tạm thời ẩn các tab mà chỉ quản lý mới thấy
-            tabControl1.TabPages.Remove(tabLuong);
-            tabControl1.TabPages.Remove(tabBaoCao);
+            // 1. Xóa sạch tất cả các tab hiện có
+            tabControl1.TabPages.Clear();
 
-            if (chucVu.Equals("Quản lý", StringComparison.OrdinalIgnoreCase))
+            // 2. Thêm lại các tab mà vai trò nào cũng được xem
+            tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabHoSo"));
+            tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabChamCong"));
+
+            // 3. Nếu là Quản lý, thêm các tab đặc biệt
+            if (tenVaiTro.Equals("Quản lý", StringComparison.OrdinalIgnoreCase))
             {
-                // Nếu là Quản lý, thêm các tab đó trở lại
-                tabControl1.TabPages.Add(tabLuong);
-                tabControl1.TabPages.Add(tabBaoCao);
+                tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabLuong"));
+                tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabBaoCao"));
             }
         }
 
+        // Phương thức này giữ nguyên, không cần sửa
         private void TruyenThongTinVaoUserControls()
         {
             // Giả sử tên các UserControl bạn kéo vào Designer là ucNhanVienManager1, ucChamCong1...

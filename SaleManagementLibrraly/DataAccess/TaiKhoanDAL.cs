@@ -30,30 +30,35 @@ namespace SaleManagementLibrraly.DataAccess
         // HÀM KIỂM TRA ĐĂNG NHẬP
         // =============================================================
         // Sửa lại phương thức CheckLogin trong TaiKhoanDAL.cs
-        public TaiKhoan CheckLogin(string tenDangNhap, string matKhau)
+        public TaiKhoan CheckLogin(string tenDangNhap, string matKhau, int maVaiTro)
         {
-            TaiKhoan? taiKhoan = null;
-            string SQLSelect = "SELECT MaTaiKhoan, TenDangNhap, MatKhau, VaiTro, MaNV, MaKH FROM TaiKhoan WHERE TenDangNhap = @TenDangNhap AND MatKhau = @MatKhau";
-
+            TaiKhoan taiKhoan = null;
+            string SQLSelect = @"SELECT tk.*, vt.TenVaiTro 
+                         FROM TaiKhoan tk 
+                         JOIN VaiTro vt ON tk.MaVaiTro = vt.MaVaiTro
+                         WHERE TenDangNhap = @TenDangNhap 
+                           AND MatKhau = @MatKhau 
+                           AND tk.MaVaiTro = @MaVaiTro"; // Thêm điều kiện kiểm tra vai trò
             try
             {
                 var parameters = new[]
                 {
             StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String),
-            StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String)
+            StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String),
+            StockDataProvider.CreateParameter("@MaVaiTro", 4, maVaiTro, DbType.Int32) // Thêm parameter mới
         };
 
-                // SỬA DÒNG NÀY
                 using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text, parameters);
                 if (reader.Read())
                 {
-                    //... code còn lại giữ nguyên
+                    // Code map dữ liệu giữ nguyên
                     taiKhoan = new TaiKhoan
                     {
                         MaTaiKhoan = Convert.ToInt32(reader["MaTaiKhoan"]),
                         TenDangNhap = reader["TenDangNhap"].ToString(),
                         MatKhau = reader["MatKhau"].ToString(),
-                        VaiTro = reader["VaiTro"].ToString(),
+                        MaVaiTro = Convert.ToInt32(reader["MaVaiTro"]),
+                        TenVaiTro = reader["TenVaiTro"].ToString(),
                         MaNV = reader["MaNV"] == DBNull.Value ? null : Convert.ToInt32(reader["MaNV"]),
                         MaKH = reader["MaKH"] == DBNull.Value ? null : Convert.ToInt32(reader["MaKH"])
                     };
@@ -63,8 +68,6 @@ namespace SaleManagementLibrraly.DataAccess
             {
                 throw new Exception("Lỗi khi kiểm tra đăng nhập: " + ex.Message);
             }
-            // Dòng CloseConnection() có thể không cần thiết nếu bạn dùng using cho reader
-
             return taiKhoan;
         }
 
@@ -103,10 +106,10 @@ namespace SaleManagementLibrraly.DataAccess
         // =============================================================
         public IEnumerable<TaiKhoan> GetAll()
         {
-            string SQLSelect = @"SELECT MaTaiKhoan, TenDangNhap, MatKhau, VaiTro, MaNV, MaKH 
-                                 FROM TaiKhoan";
             var taiKhoanList = new List<TaiKhoan>();
-
+            string SQLSelect = @"SELECT tk.*, vt.TenVaiTro 
+                                 FROM TaiKhoan tk 
+                                 LEFT JOIN VaiTro vt ON tk.MaVaiTro = vt.MaVaiTro";
             try
             {
                 using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text);
@@ -117,7 +120,8 @@ namespace SaleManagementLibrraly.DataAccess
                         MaTaiKhoan = Convert.ToInt32(reader["MaTaiKhoan"]),
                         TenDangNhap = reader["TenDangNhap"].ToString(),
                         MatKhau = reader["MatKhau"].ToString(),
-                        VaiTro = reader["VaiTro"].ToString(),
+                        MaVaiTro = reader["MaVaiTro"] == DBNull.Value ? null : Convert.ToInt32(reader["MaVaiTro"]),
+                        TenVaiTro = reader["TenVaiTro"].ToString(),
                         MaNV = reader["MaNV"] == DBNull.Value ? null : Convert.ToInt32(reader["MaNV"]),
                         MaKH = reader["MaKH"] == DBNull.Value ? null : Convert.ToInt32(reader["MaKH"])
                     });
@@ -137,13 +141,13 @@ namespace SaleManagementLibrraly.DataAccess
         {
             try
             {
-                string sqlInsert = @"INSERT INTO TaiKhoan (TenDangNhap, MatKhau, VaiTro, MaNV, MaKH) 
-                                     VALUES (@TenDangNhap, @MatKhau, @VaiTro, @MaNV, @MaKH)";
+                string sqlInsert = @"INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaVaiTro, MaNV, MaKH) 
+                                     VALUES (@TenDangNhap, @MatKhau, @MaVaiTro, @MaNV, @MaKH)";
                 var parameters = new List<SqlParameter>
                 {
                     StockDataProvider.CreateParameter("@TenDangNhap", 50, taiKhoan.TenDangNhap, DbType.String),
                     StockDataProvider.CreateParameter("@MatKhau", 50, taiKhoan.MatKhau, DbType.String),
-                    StockDataProvider.CreateParameter("@VaiTro", 50, taiKhoan.VaiTro, DbType.String),
+                    StockDataProvider.CreateParameter("@MaVaiTro", 4, taiKhoan.MaVaiTro ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaNV", 4, taiKhoan.MaNV ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32)
                 };
@@ -165,14 +169,14 @@ namespace SaleManagementLibrraly.DataAccess
             try
             {
                 string sqlUpdate = @"UPDATE TaiKhoan 
-                                     SET TenDangNhap = @TenDangNhap, MatKhau = @MatKhau, VaiTro = @VaiTro, MaNV = @MaNV, MaKH = @MaKH 
+                                     SET TenDangNhap = @TenDangNhap, MatKhau = @MatKhau, MaVaiTro = @MaVaiTro, MaNV = @MaNV, MaKH = @MaKH 
                                      WHERE MaTaiKhoan = @MaTaiKhoan";
                 var parameters = new List<SqlParameter>
                 {
                     StockDataProvider.CreateParameter("@MaTaiKhoan", 4, taiKhoan.MaTaiKhoan, DbType.Int32),
                     StockDataProvider.CreateParameter("@TenDangNhap", 50, taiKhoan.TenDangNhap, DbType.String),
                     StockDataProvider.CreateParameter("@MatKhau", 50, taiKhoan.MatKhau, DbType.String),
-                    StockDataProvider.CreateParameter("@VaiTro", 50, taiKhoan.VaiTro, DbType.String),
+                    StockDataProvider.CreateParameter("@MaVaiTro", 4, taiKhoan.MaVaiTro ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaNV", 4, taiKhoan.MaNV ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32)
                 };

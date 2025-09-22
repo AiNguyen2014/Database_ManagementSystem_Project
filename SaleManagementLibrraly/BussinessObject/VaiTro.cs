@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SaleManagementLibrraly.BussinessObject
+﻿namespace SaleManagementLibrraly.BussinessObject
 {
     public class VaiTro
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        // SỬA LẠI: Đổi tên Id -> MaVaiTro, Name -> TenVaiTro cho đồng bộ
+        public int MaVaiTro { get; set; }
+        public string TenVaiTro { get; set; }
     }
 }

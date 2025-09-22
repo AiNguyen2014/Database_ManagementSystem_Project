@@ -84,7 +84,6 @@
             tabChamCong.Name = "tabChamCong";
             tabChamCong.Padding = new Padding(3);
             tabChamCong.Size = new Size(943, 563);
-            tabChamCong.Size = new Size(780, 508);
             tabChamCong.TabIndex = 1;
             tabChamCong.Text = "Chấm công";
             tabChamCong.UseVisualStyleBackColor = true;
@@ -95,8 +94,7 @@
             ucChamCong1.CurrentNhanVien = null;
             ucChamCong1.Location = new Point(-4, 0);
             ucChamCong1.Name = "ucChamCong1";
-            ucChamCong1.Size = new Size(947, 563);
-            ucChamCong1.Size = new Size(787, 558);
+            ucChamCong1.Size = new Size(999, 558);
             ucChamCong1.TabIndex = 0;
             // 
             // tabLuong
@@ -106,7 +104,6 @@
             tabLuong.Name = "tabLuong";
             tabLuong.Padding = new Padding(3);
             tabLuong.Size = new Size(943, 563);
-            tabLuong.Size = new Size(780, 508);
             tabLuong.TabIndex = 2;
             tabLuong.Text = "Lương";
             tabLuong.UseVisualStyleBackColor = true;
