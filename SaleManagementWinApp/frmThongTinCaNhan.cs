@@ -69,6 +69,35 @@ namespace SaleManagementWinApp
                 // Gọi hàm DAL để gọi Stored Procedure
                 KhachHangDAL.Instance.UpdateThongTin(updatedKhachHang);
 
+                // ĐỔI MẬT KHẨU (NẾU NGƯỜI DÙNG NHẬP VÀO)
+                if (!string.IsNullOrWhiteSpace(txtMatKhauMoi.Text))
+                {
+                    // Bắt buộc phải nhập mật khẩu cũ để xác thực
+                    if (string.IsNullOrWhiteSpace(txtMatKhauCu.Text))
+                    {
+                        MessageBox.Show("Vui lòng nhập mật khẩu cũ để xác nhận thay đổi.", "Yêu cầu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Dùng lại hàm CheckLogin để kiểm tra mật khẩu cũ có đúng không
+                    TaiKhoan tk = TaiKhoanDAL.Instance.CheckLogin(LoggedInAccount.TenDangNhap, txtMatKhauCu.Text);
+                    if (tk == null)
+                    {
+                        MessageBox.Show("Mật khẩu cũ không chính xác!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Kiểm tra mật khẩu mới và xác nhận phải khớp nhau
+                    if (txtMatKhauMoi.Text != txtXacNhanMK.Text)
+                    {
+                        MessageBox.Show("Mật khẩu mới và xác nhận không khớp!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Nếu mọi thứ hợp lệ, tiến hành đổi mật khẩu
+                    TaiKhoanDAL.Instance.ChangePassword(LoggedInAccount.TenDangNhap, txtMatKhauMoi.Text);
+                }
+
                 MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
             }

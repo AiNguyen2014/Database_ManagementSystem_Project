@@ -13,5 +13,6 @@ namespace SaleManagementLibrraly.BussinessObject
         public string DiaChi { get; set; }
         public string GioiTinh { get; set; }
         public string SoDienThoai { get; set; }
+
     }
 }

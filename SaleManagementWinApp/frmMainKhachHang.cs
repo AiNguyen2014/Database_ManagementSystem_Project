@@ -67,9 +67,20 @@ namespace SaleManagementWinApp
             this.Close(); // Đóng form này, form Login sẽ tự hiện ra
         }
 
-        private void mnuThoat_Click(object sender, EventArgs e)
+        private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            // Hiển thị hộp thoại xác nhận trước khi thoát
+            DialogResult result = MessageBox.Show(
+                "Bạn có chắc chắn muốn thoát khỏi ứng dụng không?",
+                "Xác nhận thoát",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
     }
 }

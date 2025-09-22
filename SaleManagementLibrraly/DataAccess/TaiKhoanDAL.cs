@@ -150,7 +150,7 @@ namespace SaleManagementLibrraly.DataAccess
                     StockDataProvider.CreateParameter("@MaKH", 4, taiKhoan.MaKH ?? (object)DBNull.Value, DbType.Int32)
                 };
 
-                new StockDataProvider().Insert(sqlInsert, CommandType.Text, parameters.ToArray());
+                dataProvider.ExecuteNonQuery(sqlInsert, CommandType.Text, parameters.ToArray());
             }
             catch (Exception ex)
             {

@@ -44,5 +44,32 @@ namespace SaleManagementLibrraly.DataAccess
             catch (Exception ex) { throw new Exception("Lỗi khi thêm hóa đơn: " + ex.Message); }
             finally { CloseConnection(); }
         }
+
+
+        public DataTable GetLichSuMuaHang(int maKH)
+        {
+            try
+            {
+                string sql = "EXEC sp_KhachHang_GetLichSuMuaHang @MaKH";
+
+                // Tạo parameter theo đúng cách mà bạn đã làm ở các hàm khác
+                var parameters = new List<SqlParameter>
+        {
+            StockDataProvider.CreateParameter("@MaKH", sizeof(int), maKH, DbType.Int32)
+        };
+
+                // Gọi phương thức ExecuteQuery mới
+                DataTable data = dataProvider.ExecuteQuery(sql, CommandType.Text, parameters.ToArray());
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy lịch sử mua hàng: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
     }
 }

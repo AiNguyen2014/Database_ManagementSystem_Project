@@ -8,9 +8,10 @@ namespace SaleManagementLibrraly.DataAccess
     public class StockDataProvider
     {
         private static readonly string connectionString =
-            @"Data Source=localhost;
+            @"Data Source=192.168.2.3,1433;
               Initial Catalog=QuanLyCuaHangBachHoa;
-              Integrated Security=True;
+              User ID=DBMSProject;
+                Password=Project123;
               TrustServerCertificate=True";
 
         private static SqlConnection? connection;
@@ -65,7 +66,7 @@ namespace SaleManagementLibrraly.DataAccess
             return cmd.ExecuteReader(); // Khi DataReader đóng => connection sẽ tự giải phóng
         }
 
-        private void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             using var connection = new SqlConnection(connectionString);
             connection.Open();
@@ -89,6 +90,29 @@ namespace SaleManagementLibrraly.DataAccess
                 command.Parameters.AddRange(parameters);
             result = command.ExecuteScalar();
             return result ?? DBNull.Value;
+        }
+
+        public DataTable ExecuteQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters);
+                    }
+
+                    using (var adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(table);
+                    }
+                }
+            }
+            return table;
         }
 
         public void Insert(string commandText, CommandType commandType, params SqlParameter[] parameters)
