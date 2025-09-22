@@ -38,6 +38,8 @@
             btnThoat = new Button();
             linkLabelDangKyNgay = new LinkLabel();
             label1 = new Label();
+            label2 = new Label();
+            cboVaiTro = new ComboBox();
             SuspendLayout();
             // 
             // btnDangNhap
@@ -45,7 +47,7 @@
             btnDangNhap.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnDangNhap.ForeColor = Color.Purple;
             btnDangNhap.Image = (Image)resources.GetObject("btnDangNhap.Image");
-            btnDangNhap.Location = new Point(112, 230);
+            btnDangNhap.Location = new Point(108, 274);
             btnDangNhap.Name = "btnDangNhap";
             btnDangNhap.Size = new Size(140, 41);
             btnDangNhap.TabIndex = 3;
@@ -111,7 +113,7 @@
             btnThoat.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnThoat.ForeColor = Color.Purple;
             btnThoat.Image = (Image)resources.GetObject("btnThoat.Image");
-            btnThoat.Location = new Point(306, 230);
+            btnThoat.Location = new Point(302, 274);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(120, 41);
             btnThoat.TabIndex = 4;
@@ -125,7 +127,7 @@
             linkLabelDangKyNgay.AutoSize = true;
             linkLabelDangKyNgay.BackColor = Color.White;
             linkLabelDangKyNgay.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
-            linkLabelDangKyNgay.Location = new Point(47, 284);
+            linkLabelDangKyNgay.Location = new Point(43, 328);
             linkLabelDangKyNgay.Name = "linkLabelDangKyNgay";
             linkLabelDangKyNgay.Size = new Size(277, 23);
             linkLabelDangKyNgay.TabIndex = 5;
@@ -141,12 +143,33 @@
             label1.Size = new Size(0, 20);
             label1.TabIndex = 6;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.ForeColor = Color.GhostWhite;
+            label2.Location = new Point(43, 230);
+            label2.Name = "label2";
+            label2.Size = new Size(63, 23);
+            label2.TabIndex = 7;
+            label2.Text = "Vai trò";
+            // 
+            // cboVaiTro
+            // 
+            cboVaiTro.FormattingEnabled = true;
+            cboVaiTro.Location = new Point(139, 227);
+            cboVaiTro.Name = "cboVaiTro";
+            cboVaiTro.Size = new Size(151, 28);
+            cboVaiTro.TabIndex = 9;
+            // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
-            ClientSize = new Size(482, 325);
+            ClientSize = new Size(583, 377);
+            Controls.Add(cboVaiTro);
+            Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(linkLabelDangKyNgay);
             Controls.Add(btnThoat);
@@ -159,6 +182,7 @@
             Name = "frmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
+            Load += frmLogin_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -175,5 +199,7 @@
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private LinkLabel linkLabelDangKyNgay;
         private Label label1;
+        private Label label2;
+        private ComboBox cboVaiTro;
     }
 }

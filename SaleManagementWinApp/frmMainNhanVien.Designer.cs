@@ -95,8 +95,7 @@
             ucChamCong1.CurrentNhanVien = null;
             ucChamCong1.Location = new Point(-4, 0);
             ucChamCong1.Name = "ucChamCong1";
-            ucChamCong1.Size = new Size(947, 563);
-            ucChamCong1.Size = new Size(787, 558);
+            ucChamCong1.Size = new Size(999, 558);
             ucChamCong1.TabIndex = 0;
             // 
             // tabLuong

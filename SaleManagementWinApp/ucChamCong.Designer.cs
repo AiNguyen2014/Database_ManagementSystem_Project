@@ -51,7 +51,7 @@
             dgvChamCong.Name = "dgvChamCong";
             dgvChamCong.RowHeadersWidth = 51;
             dgvChamCong.RowTemplate.Height = 29;
-            dgvChamCong.Size = new Size(620, 302);
+            dgvChamCong.Size = new Size(813, 436);
             dgvChamCong.TabIndex = 1;
             // 
             // btnCheckOut
@@ -84,8 +84,7 @@
             Controls.Add(dgvChamCong);
             Controls.Add(btnCheckIn);
             Name = "ucChamCong";
-            Size = new Size(681, 445);
-            Size = new Size(696, 446);
+            Size = new Size(881, 600);
             ((System.ComponentModel.ISupportInitialize)dgvChamCong).EndInit();
             ResumeLayout(false);
             PerformLayout();

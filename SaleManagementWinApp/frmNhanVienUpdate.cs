@@ -7,7 +7,7 @@ namespace SaleManagementWinApp
 {
     public partial class frmNhanVienUpdate : Form
     {
-        public bool InsertOrUpdate { get; set; } // true = update
+        public bool InsertOrUpdate { get; set; }
         public NhanVien NhanVienInfo { get; set; }
 
         public frmNhanVienUpdate()
@@ -17,11 +17,9 @@ namespace SaleManagementWinApp
 
         private void frmNhanVienUpdate_Load(object sender, EventArgs e)
         {
-            cboChucVu.SelectedIndex = 0; // Mặc định chọn chức vụ đầu tiên
-
-            // Nếu là chế độ Cập nhật, đổ dữ liệu của nhân viên vào các ô
-            if (InsertOrUpdate == true)
+            if (InsertOrUpdate == true) // Chế độ Cập nhật
             {
+                txtMaNV.ReadOnly = true;
                 txtMaNV.Text = NhanVienInfo.MaNV.ToString();
                 txtTenNV.Text = NhanVienInfo.HoTen;
                 dtpNgaySinh.Value = NhanVienInfo.NgaySinh;
@@ -29,8 +27,11 @@ namespace SaleManagementWinApp
                 txtDienThoaiNV.Text = NhanVienInfo.SoDienThoai;
                 dtpNgayVaoLam.Value = NhanVienInfo.NgayVaoLam;
                 txtCCCD.Text = NhanVienInfo.CCCD;
-                cboChucVu.SelectedItem = NhanVienInfo.ChucVu;
                 chkGioiTinh.Checked = NhanVienInfo.GioiTinh.Equals("Nam");
+            }
+            else // Chế độ Thêm mới
+            {
+                txtMaNV.ReadOnly = false;
             }
         }
 
@@ -38,8 +39,6 @@ namespace SaleManagementWinApp
         {
             try
             {
-                // TODO: Thêm kiểm tra dữ liệu đầu vào chi tiết hơn
-
                 var nv = new NhanVien
                 {
                     HoTen = txtTenNV.Text,
@@ -48,16 +47,16 @@ namespace SaleManagementWinApp
                     SoDienThoai = txtDienThoaiNV.Text,
                     NgayVaoLam = dtpNgayVaoLam.Value,
                     CCCD = txtCCCD.Text,
-                    ChucVu = cboChucVu.SelectedItem.ToString(),
                     GioiTinh = chkGioiTinh.Checked ? "Nam" : "Nữ"
                 };
 
-                if (InsertOrUpdate == false) // Chế độ Insert
+                if (InsertOrUpdate == false)
                 {
+                    // MaNV sẽ do database tự tăng, không cần gán ở đây
                     NhanVienDAL.Instance.AddNew(nv);
                     MessageBox.Show("Thêm mới nhân viên thành công!", "Thông báo");
                 }
-                else // Chế độ Update
+                else
                 {
                     nv.MaNV = int.Parse(txtMaNV.Text);
                     NhanVienDAL.Instance.Update(nv);
@@ -69,13 +68,10 @@ namespace SaleManagementWinApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, InsertOrUpdate ? "Lỗi cập nhật nhân viên" : "Lỗi thêm mới nhân viên");
+                MessageBox.Show(ex.Message, InsertOrUpdate ? "Lỗi cập nhật" : "Lỗi thêm mới");
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        private void btnClose_Click(object sender, EventArgs e) => this.Close();
     }
 }
