@@ -7,6 +7,7 @@ namespace SaleManagementWinApp
 {
     public partial class frmMainNhanVien : Form
     {
+
         public TaiKhoan LoggedInAccount { get; set; }
         private NhanVien currentNhanVien;
 
