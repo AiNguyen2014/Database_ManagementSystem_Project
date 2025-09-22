@@ -45,7 +45,7 @@
             btnClose.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnClose.ForeColor = Color.Purple;
             btnClose.Image = (Image)resources.GetObject("btnClose.Image");
-            btnClose.Location = new Point(643, 399);
+            btnClose.Location = new Point(748, 473);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(117, 41);
             btnClose.TabIndex = 15;
@@ -59,7 +59,7 @@
             btnDelete.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnDelete.ForeColor = Color.Purple;
             btnDelete.Image = (Image)resources.GetObject("btnDelete.Image");
-            btnDelete.Location = new Point(455, 399);
+            btnDelete.Location = new Point(521, 473);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(124, 41);
             btnDelete.TabIndex = 14;
@@ -73,7 +73,7 @@
             btnUpdate.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnUpdate.ForeColor = Color.Purple;
             btnUpdate.Image = (Image)resources.GetObject("btnUpdate.Image");
-            btnUpdate.Location = new Point(241, 399);
+            btnUpdate.Location = new Point(283, 473);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new Size(140, 41);
             btnUpdate.TabIndex = 13;
@@ -87,7 +87,7 @@
             btnNew.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnNew.ForeColor = Color.Purple;
             btnNew.Image = (Image)resources.GetObject("btnNew.Image");
-            btnNew.Location = new Point(40, 399);
+            btnNew.Location = new Point(40, 473);
             btnNew.Name = "btnNew";
             btnNew.Size = new Size(140, 41);
             btnNew.TabIndex = 12;
@@ -104,9 +104,9 @@
             dgvNV.RowHeadersWidth = 51;
             dgvNV.RowTemplate.Height = 29;
             dgvNV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvNV.Size = new Size(720, 251);
+            dgvNV.Size = new Size(846, 350);
             dgvNV.TabIndex = 11;
-            //dgvNV.CellClick += dgvNV_CellClick;
+            dgvNV.CellContentClick += dgvNV_CellContentClick;
             dgvNV.CellDoubleClick += dgvNV_CellDoubleClick;
             // 
             // txtSearchNV
@@ -139,14 +139,13 @@
             lblQLNV.Size = new Size(291, 37);
             lblQLNV.TabIndex = 8;
             lblQLNV.Text = "QUẢN LÝ NHÂN VIÊN";
-            //lblQLNV.Click += lblQLNV_Click;
             // 
             // frmNhanVien
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(920, 544);
             Controls.Add(btnClose);
             Controls.Add(btnDelete);
             Controls.Add(btnUpdate);

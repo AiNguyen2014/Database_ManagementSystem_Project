@@ -29,23 +29,25 @@ namespace SaleManagementLibrraly.DataAccess
         // =============================================================
         // HÀM KIỂM TRA ĐĂNG NHẬP
         // =============================================================
+        // Sửa lại phương thức CheckLogin trong TaiKhoanDAL.cs
         public TaiKhoan CheckLogin(string tenDangNhap, string matKhau)
         {
             TaiKhoan? taiKhoan = null;
-
             string SQLSelect = "SELECT MaTaiKhoan, TenDangNhap, MatKhau, VaiTro, MaNV, MaKH FROM TaiKhoan WHERE TenDangNhap = @TenDangNhap AND MatKhau = @MatKhau";
 
             try
             {
                 var parameters = new[]
                 {
-                    StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String),
-                    StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String)
-                };
+            StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String),
+            StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String)
+        };
 
-                using var reader = dataProvider.GetDataReader(SQLSelect, CommandType.Text, parameters);
+                // SỬA DÒNG NÀY
+                using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text, parameters);
                 if (reader.Read())
                 {
+                    //... code còn lại giữ nguyên
                     taiKhoan = new TaiKhoan
                     {
                         MaTaiKhoan = Convert.ToInt32(reader["MaTaiKhoan"]),
@@ -61,14 +63,10 @@ namespace SaleManagementLibrraly.DataAccess
             {
                 throw new Exception("Lỗi khi kiểm tra đăng nhập: " + ex.Message);
             }
-            finally
-            {
-                CloseConnection();
-            }
+            // Dòng CloseConnection() có thể không cần thiết nếu bạn dùng using cho reader
 
             return taiKhoan;
         }
-
 
         // =============================================================
         // LẤY TÀI KHOẢN THEO TÊN ĐĂNG NHẬP

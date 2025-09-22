@@ -8,10 +8,7 @@ namespace SaleManagementLibrraly.DataAccess
     public class StockDataProvider
     {
         private static readonly string connectionString =
-            @"Data Source=localhost;
-              Initial Catalog=QuanLyCuaHangBachHoa;
-              Integrated Security=True;
-              TrustServerCertificate=True";
+            @"Data Source=LAPTOP-O8J1ULHM;Initial Catalog=QLCH;Integrated Security=True; TrustServerCertificate=True";
 
         private static SqlConnection? connection;
 
@@ -65,7 +62,7 @@ namespace SaleManagementLibrraly.DataAccess
             return cmd.ExecuteReader(); // Khi DataReader đóng => connection sẽ tự giải phóng
         }
 
-        private void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             using var connection = new SqlConnection(connectionString);
             connection.Open();

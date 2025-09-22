@@ -7,7 +7,7 @@ namespace SaleManagementWinApp
 {
     public partial class frmLogin : Form
     {
-        
+
         public frmLogin()
         {
             InitializeComponent();
@@ -17,7 +17,6 @@ namespace SaleManagementWinApp
         {
             try
             {
-                // Giữ lại phần kiểm tra dữ liệu trống, rất tốt!
                 if (string.IsNullOrEmpty(txtDangNhap.Text))
                 {
                     errorProvider1?.SetError(txtDangNhap, "Vui lòng nhập tên đăng nhập");
@@ -35,28 +34,30 @@ namespace SaleManagementWinApp
 
                 if (taiKhoan != null) // Nếu tìm thấy tài khoản
                 {
-                    this.Hide(); // Ẩn form login đi
+                    this.Hide();
 
                     MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-
                     if (taiKhoan.VaiTro.Equals("NhanVien", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Mở form chính cho nhân viên/quản trị
-                        frmMain f_main = new frmMain();
-                        f_main.ShowDialog(); // Dùng ShowDialog để form chính đóng thì ứng dụng mới thoát
+                        frmMainNhanVien f_main_nv = new frmMainNhanVien
+                        {
+                            LoggedInAccount = taiKhoan // Truyền thông tin tài khoản qua
+                        };
+                        f_main_nv.ShowDialog();
                     }
+
                     else if (taiKhoan.VaiTro.Equals("KhachHang", StringComparison.OrdinalIgnoreCase))
                     {
                         frmMainKhachHang f_main_kh = new frmMainKhachHang
                         {
-                            LoggedInAccount = taiKhoan // Gán thông tin tài khoản vào property của form main
+                            LoggedInAccount = taiKhoan
                         };
                         f_main_kh.ShowDialog();
                     }
-                    this.Close(); // Sau khi form chính đóng, đóng luôn form login
+                    this.Close();
                 }
-                else // Nếu không tìm thấy
+                else
                 {
                     MessageBox.Show("Tên đăng nhập hoặc mật khẩu không chính xác.", "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -76,6 +77,11 @@ namespace SaleManagementWinApp
         {
             frmKhachHangDangKy frm = new frmKhachHangDangKy();
             frm.ShowDialog();
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
