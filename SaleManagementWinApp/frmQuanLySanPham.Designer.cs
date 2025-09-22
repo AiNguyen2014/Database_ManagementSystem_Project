@@ -52,6 +52,7 @@
             btnClose.Text = "Thoát";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = true;
+            //btnClose.Click += btnClose_Click;
             // 
             // btnDelete
             // 
@@ -65,6 +66,7 @@
             btnDelete.Text = "Xóa";
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDelete.UseVisualStyleBackColor = true;
+            //btnDelete.Click += btnDelete_Click;
             // 
             // btnUpdate
             // 
@@ -104,6 +106,7 @@
             dgvHH.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvHH.Size = new Size(720, 251);
             dgvHH.TabIndex = 11;
+            //dgvHH.CellClick += dgvHH_CellClick;
             dgvHH.CellDoubleClick += dgvHH_CellDoubleClick;
             // 
             // txtSearchHH
@@ -138,7 +141,7 @@
             lblQLHH.TabIndex = 8;
             lblQLHH.Text = "QUẢN LÝ HÀNG HÓA";
             // 
-            // frmQuanLySanPham
+            // frmHangHoa
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -152,9 +155,9 @@
             Controls.Add(txtSearchHH);
             Controls.Add(lblKeyword);
             Controls.Add(lblQLHH);
-            Name = "frmQuanLySanPham";
+            Name = "frmHangHoa";
             Text = "Hàng hóa";
-            Load += frmQuanLySanPham_Load;
+           // Load += frmHangHoa_Load;
             ((System.ComponentModel.ISupportInitialize)dgvHH).EndInit();
             ResumeLayout(false);
             PerformLayout();

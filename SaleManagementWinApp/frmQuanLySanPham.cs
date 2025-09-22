@@ -106,8 +106,6 @@ namespace SaleManagementWinApp
             btnUpdate_Click(sender, e);
         }
 
-        
-
         // Các nút Delete, Close bạn có thể thêm vào tương tự như form Nhân Viên
     }
 }

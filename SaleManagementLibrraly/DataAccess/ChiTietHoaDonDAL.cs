@@ -26,20 +26,22 @@ namespace SaleManagementLibrraly.DataAccess
         }
         #endregion
 
-        // Hàm để thêm một dòng chi tiết vào hóa đơn bằng stored procedure
+        // Hàm để thêm một dòng chi tiết vào hóa đơn
         public void AddNew(ChiTietHoaDon cthd)
         {
             try
             {
-                string procedureName = "sp_ThemChiTietHoaDon";
+                // Giả định MaCTHD không phải là tự tăng
+                string sqlInsert = "INSERT INTO ChiTietHoaDon (MaCTHD, MaHD, MaSP, SoLuong, DonGia) VALUES (@MaCTHD, @MaHD, @MaSP, @SoLuong, @DonGia)";
                 var parameters = new List<SqlParameter>
                 {
+                    StockDataProvider.CreateParameter("@MaCTHD", 0, cthd.MaCTHD, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaHD", 0, cthd.MaHD, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaSP", 0, cthd.MaSP, DbType.Int32),
-                    StockDataProvider.CreateParameter("@SoLuong", 0, cthd.SoLuong, DbType.Int32)
+                    StockDataProvider.CreateParameter("@SoLuong", 0, cthd.SoLuong, DbType.Int32),
+                    StockDataProvider.CreateParameter("@DonGia", 0, cthd.DonGia, DbType.Decimal)
                 };
-                // Gọi stored procedure thay vì INSERT trực tiếp
-                dataProvider.Insert(procedureName, CommandType.StoredProcedure, parameters.ToArray());
+                dataProvider.Insert(sqlInsert, CommandType.Text, parameters.ToArray());
             }
             catch (Exception ex)
             {
