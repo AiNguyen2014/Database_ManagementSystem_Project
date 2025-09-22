@@ -84,7 +84,7 @@
             Controls.Add(dgvChamCong);
             Controls.Add(btnCheckIn);
             Name = "ucChamCong";
-            Size = new Size(696, 446);
+            Size = new Size(681, 445);
             ((System.ComponentModel.ISupportInitialize)dgvChamCong).EndInit();
             ResumeLayout(false);
             PerformLayout();
