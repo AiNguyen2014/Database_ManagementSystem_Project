@@ -7,7 +7,7 @@ namespace SaleManagementLibrraly.DataAccess
     public class LoaiSanPhamDAL : BaseDAL
     {
         #region Singleton
-        private static LoaiSanPhamDAL instance = null;
+        private static LoaiSanPhamDAL? instance = null;
         private static readonly object instanceLock = new object();
         private LoaiSanPhamDAL() { }
         public static LoaiSanPhamDAL Instance
@@ -28,12 +28,13 @@ namespace SaleManagementLibrraly.DataAccess
 
         public IEnumerable<LoaiSanPham> GetAll()
         {
+
             var list = new List<LoaiSanPham>();
             string SQLSelect = "SELECT MaLoaiSP, TenLoaiSP FROM LoaiSanPham";
 
             try
             {
-                using var reader = dataProvider.GetDataReader(SQLSelect, CommandType.Text);
+                using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text);
                 while (reader.Read())
                 {
                     list.Add(new LoaiSanPham
@@ -42,14 +43,11 @@ namespace SaleManagementLibrraly.DataAccess
                         TenLoaiSP = reader.GetString(1)
                     });
                 }
+
             }
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi lấy danh sách loại sản phẩm: " + ex.Message);
-            }
-            finally
-            {
-                CloseConnection();
             }
             return list;
         }

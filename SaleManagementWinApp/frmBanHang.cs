@@ -31,12 +31,15 @@ namespace SaleManagementWinApp
             gioHangSource = new BindingSource();
 
             // Thiết lập khách hàng mặc định là khách vãng lai
-            khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" }; // Giả định MaKH=1 là khách vãng lai
+            khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" };
+            lblTenKH.Text = khachHangHienTai.Hoten; // Hiển thị khách vãng lai mặc định
 
             // Tải dữ liệu lên các control
             LoadLoaiSanPham();
             LoadDanhSachSanPham();
             SetupDataGridViews();
+            LoadPhuongThuc();
+
 
             // Gán sự kiện cho các control
             cboLoaiSP.SelectedIndexChanged += (s, ev) => FilterSanPham();
@@ -54,7 +57,8 @@ namespace SaleManagementWinApp
             try
             {
                 var loaiSPList = LoaiSanPhamDAL.Instance.GetAll().ToList();
-                // Thêm một mục "Tất cả" vào đầu danh sách
+                MessageBox.Show("Số loại SP lấy được: " + loaiSPList.Count);
+
                 loaiSPList.Insert(0, new LoaiSanPham { MaLoaiSP = 0, TenLoaiSP = "Tất cả loại" });
 
                 cboLoaiSP.DataSource = loaiSPList;
@@ -80,6 +84,15 @@ namespace SaleManagementWinApp
                 MessageBox.Show("Lỗi tải danh sách sản phẩm: " + ex.Message);
             }
         }
+        private void LoadPhuongThuc()
+        {
+            // Danh sách phương thức thanh toán cố định
+            var phuongThucList = new List<string> { "Tiền mặt", "Chuyển khoản", "Thẻ", "Ví điện tử" };
+
+            cboPhuongThuc.DataSource = phuongThucList;
+            cboPhuongThuc.SelectedIndex = 0; // chọn mặc định
+        }
+
 
         private void SetupDataGridViews()
         {
@@ -101,25 +114,40 @@ namespace SaleManagementWinApp
         #endregion
 
         #region Xử lý Nghiệp vụ Bán hàng
+
         private void FilterSanPham()
         {
-            var keyword = txtTimKiemSP.Text;
-            var selectedLoaiSP = (int)cboLoaiSP.SelectedValue;
-
-            string filter = "";
-
-            if (!string.IsNullOrEmpty(keyword))
+            try
             {
-                filter += $"TenSP LIKE '%{keyword}%'";
-            }
+                var keyword = txtTimKiemSP.Text.Trim().ToLower();
+                var selectedLoaiSP = (int)cboLoaiSP.SelectedValue;
 
-            if (selectedLoaiSP > 0)
+                // Lấy danh sách tất cả sản phẩm từ DAL
+                var allSanPham = SanPhamDAL.Instance.GetAll();
+
+                // Lọc theo từ khóa
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allSanPham = allSanPham
+                        .Where(sp => sp.TenSP.ToLower().Contains(keyword))
+                        .ToList();
+                }
+
+                // Lọc theo loại SP nếu chọn khác "Tất cả"
+                if (selectedLoaiSP > 0)
+                {
+                    allSanPham = allSanPham
+                        .Where(sp => sp.MaLoaiSP == selectedLoaiSP)
+                        .ToList();
+                }
+
+                sanPhamSource.DataSource = allSanPham;
+                dgvSanPham.DataSource = sanPhamSource;
+            }
+            catch (Exception ex)
             {
-                if (!string.IsNullOrEmpty(filter)) filter += " AND ";
-                filter += $"MaLoaiSP = {selectedLoaiSP}";
+                MessageBox.Show("Lỗi lọc sản phẩm: " + ex.Message);
             }
-
-            sanPhamSource.Filter = filter;
         }
 
         private void dgvSanPham_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -136,17 +164,14 @@ namespace SaleManagementWinApp
 
         private void ThemSanPhamVaoGioHang(SanPham sp)
         {
-            // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
             var itemInCart = gioHang.FirstOrDefault(item => item.MaSP == sp.MaSP);
 
             if (itemInCart != null)
             {
-                // Nếu có rồi thì tăng số lượng lên 1
                 itemInCart.SoLuong++;
             }
             else
             {
-                // Nếu chưa có thì thêm mới vào giỏ hàng
                 gioHang.Add(new ChiTietHoaDon
                 {
                     MaSP = sp.MaSP,
@@ -155,13 +180,11 @@ namespace SaleManagementWinApp
                 });
             }
 
-            // Cập nhật lại giỏ hàng và tổng tiền
             RefreshGioHang();
         }
 
         private void dgvChiTietHoaDon_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            // Khi người dùng sửa số lượng trong giỏ hàng, cập nhật lại tổng tiền
             RefreshGioHang();
         }
 
@@ -171,42 +194,47 @@ namespace SaleManagementWinApp
             gioHangSource.DataSource = gioHang;
             dgvChiTietHoaDon.DataSource = gioHangSource;
 
-            // Tính toán và hiển thị tổng tiền
             decimal tongTien = gioHang.Sum(item => item.ThanhTien ?? 0);
-            lblTongTienValue.Text = $"{tongTien:N0} VNĐ"; // Format tiền tệ
+            lblTongTienValue.Text = $"{tongTien:N0} VNĐ";
         }
         #endregion
 
         private void btnTimKH_Click(object sender, EventArgs e)
         {
-            string soDienThoai = txtTimKiemKH.Text;
-            if (string.IsNullOrWhiteSpace(soDienThoai))
-            {
-                // Nếu ô tìm kiếm trống, quay về khách vãng lai
-                khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" };
-                lblTenKH.Text = khachHangHienTai.Hoten;
-                return;
-            }
+            string soDienThoai = txtTimKiemKH.Text.Trim();
 
             try
             {
+                if (string.IsNullOrWhiteSpace(soDienThoai))
+                {
+                    // Nếu ô tìm kiếm trống, hiển thị khách vãng lai
+                    khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" };
+                    lblTenKH.Text = "Khách vãng lai";
+                    return;
+                }
+
                 var result = KhachHangDAL.Instance.GetBySoDienThoai(soDienThoai);
                 if (result != null)
                 {
+                    // Nếu tìm thấy khách hàng, cập nhật và hiển thị tên
                     khachHangHienTai = result;
-                    lblTenKH.Text = $"KH: {khachHangHienTai.Hoten}"; // Hiển thị tên khách hàng tìm thấy
-                    MessageBox.Show("Đã chọn khách hàng: " + khachHangHienTai.Hoten);
+                    lblTenKH.Text = result.Hoten; // Hiển thị tên khách hàng
+                    MessageBox.Show($"Đã tìm thấy khách hàng: {khachHangHienTai.Hoten}", "Thông báo");
                 }
                 else
                 {
-                    MessageBox.Show("Không tìm thấy khách hàng. Vui lòng thêm mới nếu cần.");
+                    // Nếu không tìm thấy, hiển thị khách vãng lai
                     khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" };
-                    lblTenKH.Text = khachHangHienTai.Hoten;
+                    lblTenKH.Text = "Khách vãng lai";
+                    MessageBox.Show("Không tìm thấy khách hàng với số điện thoại này.", "Thông báo");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi tìm khách hàng: " + ex.Message);
+                // Xử lý lỗi và hiển thị khách vãng lai
+                khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" };
+                lblTenKH.Text = "Khách vãng lai";
+                MessageBox.Show("Lỗi khi tìm khách hàng: " + ex.Message, "Lỗi");
             }
         }
 
@@ -220,29 +248,21 @@ namespace SaleManagementWinApp
 
             try
             {
-                // Bước 1: Tạo đối tượng Hóa Đơn
                 var hoaDon = new HoaDon
                 {
-                    // Lưu ý: MaHD của bạn không phải tự tăng, nên ta phải tự tạo.
-                    // Cách đơn giản là dùng ticks, nhưng không an toàn trong thực tế.
                     MaHD = (int)(DateTime.Now.Ticks % 1000000000),
                     NgayLap = DateTime.Now,
                     MaKH = khachHangHienTai.MaKH,
-                    MaNV = 1, // Giả định nhân viên đăng nhập có MaNV=1, bạn sẽ thay thế sau
+                    MaNV = 1, // Giả định nhân viên đăng nhập
                     TongTien = gioHang.Sum(item => item.ThanhTien ?? 0)
                 };
 
-                // Bước 2: Lưu Hóa Đơn vào DB
                 HoaDonDAL.Instance.AddNew(hoaDon);
 
-                // Bước 3: Lưu từng Chi Tiết Hóa Đơn và cập nhật số lượng sản phẩm
                 foreach (var item in gioHang)
                 {
-                    // Gán MaHD mới tạo cho từng chi tiết
                     item.MaHD = hoaDon.MaHD;
-                    // MaCTHD cũng cần tự tạo
                     item.MaCTHD = (int)(DateTime.Now.Ticks % 1000000000) + item.MaSP.Value;
-
                     ChiTietHoaDonDAL.Instance.AddNew(item);
                     SanPhamDAL.Instance.UpdateSoLuongTon(item.MaSP.Value, item.SoLuong.Value);
                 }
@@ -258,16 +278,13 @@ namespace SaleManagementWinApp
 
         private void ClearFormBanHang()
         {
-            // Reset giỏ hàng
             gioHang.Clear();
             RefreshGioHang();
 
-            // Reset khách hàng
             khachHangHienTai = new KhachHang { MaKH = 1, Hoten = "Khách vãng lai" };
-            lblTenKH.Text = khachHangHienTai.Hoten;
+            lblTenKH.Text = "Khách vãng lai";
             txtTimKiemKH.Clear();
 
-            // Tải lại danh sách sản phẩm (để cập nhật số lượng tồn)
             LoadDanhSachSanPham();
         }
     }
