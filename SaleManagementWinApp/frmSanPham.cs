@@ -1,17 +1,19 @@
-﻿using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.DataAccess; // SỬA: Dùng DataAccess
+﻿using SaleManagementLibrraly.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SaleManagementWinApp
 {
     public partial class frmSanPham : Form
     {
-        BindingSource source;
-        // Giữ lại giỏ hàng trong bộ nhớ, đây là cách làm đơn giản và hợp lý
-        List<GioHang> list_GH;
+        private SanPhamDAL sanPhamDAL = SanPhamDAL.Instance;
 
         public frmSanPham()
         {
@@ -20,70 +22,40 @@ namespace SaleManagementWinApp
 
         private void frmSanPham_Load(object sender, EventArgs e)
         {
-            list_GH = new List<GioHang>();
-            LoadSanPhamList();
-            LoadGioHangList(); // Tải giỏ hàng rỗng ban đầu
+            LoadDanhSachSanPham();
         }
 
-        public void LoadSanPhamList()
+        private void LoadDanhSachSanPham()
         {
             try
             {
-                var sanPhams = SanPhamDAL.Instance.GetAll();
-                source = new BindingSource();
-                source.DataSource = sanPhams;
-
-                dgvHangHoa.DataSource = null;
-                dgvHangHoa.DataSource = source;
-                // Có thể thêm code để tùy chỉnh các cột ở đây nếu muốn
+                DataTable dt = sanPhamDAL.GetAllSanPham();
+                dgvHangHoa.DataSource = dt;
+                // Tùy chỉnh tiêu đề cột cho thân thiện hơn
+                if (dgvHangHoa.Columns.Contains("MaSP")) dgvHangHoa.Columns["MaSP"].HeaderText = "Mã SP";
+                if (dgvHangHoa.Columns.Contains("TenSP")) dgvHangHoa.Columns["TenSP"].HeaderText = "Tên Sản Phẩm";
+                if (dgvHangHoa.Columns.Contains("DonViTinh")) dgvHangHoa.Columns["DonViTinh"].HeaderText = "Đơn Vị Tính";
+                if (dgvHangHoa.Columns.Contains("GiaNhap")) dgvHangHoa.Columns["GiaNhap"].HeaderText = "Giá Nhập";
+                if (dgvHangHoa.Columns.Contains("DonGia")) dgvHangHoa.Columns["DonGia"].HeaderText = "Đơn Giá";
+                if (dgvHangHoa.Columns.Contains("HanSuDung")) dgvHangHoa.Columns["HanSuDung"].HeaderText = "Hạn Sử Dụng";
+                if (dgvHangHoa.Columns.Contains("SoLuongTon")) dgvHangHoa.Columns["SoLuongTon"].HeaderText = "Số Lượng Tồn";
+                if (dgvHangHoa.Columns.Contains("MaLoaiSP")) dgvHangHoa.Columns["MaLoaiSP"].HeaderText = "Mã Loại SP";
+                if (dgvHangHoa.Columns.Contains("TrangThai"))   dgvHangHoa.Columns["TrangThai"].HeaderText = "Trạng Thái";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi tải danh sách sản phẩm: " + ex.Message);
+                MessageBox.Show($"Lỗi khi tải danh sách sản phẩm: {ex.Message}");
             }
         }
 
-        public void LoadGioHangList()
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
-            // Hàm này dùng để cập nhật lại DataGridView của giỏ hàng
-            var sourceGH = new BindingSource();
-            sourceGH.DataSource = list_GH;
-
-            dgvCart.DataSource = null;
-            dgvCart.DataSource = sourceGH;
+            LoadDanhSachSanPham();
         }
 
-        private void dgvHangHoa_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void btnThoat_Click(object sender, EventArgs e)
         {
-            // Xử lý khi người dùng bấm nút "Mua" trên lưới
-            // Cần đảm bảo bạn đã thêm một cột Button vào dgvHangHoa
-            // Và kiểm tra e.ColumnIndex cho đúng
-
-            // Ví dụ, giả sử cột cuối cùng là cột Button "Mua"
-            if (e.RowIndex >= 0 && e.ColumnIndex == dgvHangHoa.Columns.Count - 1)
-            {
-                var selectedSP = dgvHangHoa.Rows[e.RowIndex].DataBoundItem as SanPham;
-                if (selectedSP != null)
-                {
-                    // Thêm sản phẩm vào giỏ
-                    var itemInCart = list_GH.FirstOrDefault(item => item.MaHangHoa == selectedSP.MaSP);
-                    if (itemInCart != null)
-                    {
-                        itemInCart.SoLuong++;
-                    }
-                    else
-                    {
-                        list_GH.Add(new GioHang { MaHangHoa = selectedSP.MaSP, SoLuong = 1, DonGia = selectedSP.GiaBan });
-                    }
-                    LoadGioHangList(); // Cập nhật lại view giỏ hàng
-                }
-            }
-        }
-
-        // Các hàm khác như xóa khỏi giỏ hàng...
-        private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Tương tự, xử lý khi bấm nút "Xóa" trên giỏ hàng
+            this.Close();
         }
     }
 }

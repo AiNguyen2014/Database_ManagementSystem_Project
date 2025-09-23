@@ -29,7 +29,7 @@ namespace SaleManagementWinApp
                 txtMaSP.Text = SanPhamInfo.MaSP.ToString();
                 txtTenSP.Text = SanPhamInfo.TenSP;
                 txtGiaNhap.Text = SanPhamInfo.GiaNhap.ToString();
-                txtGiaBan.Text = SanPhamInfo.GiaBan.ToString();
+                txtGiaBan.Text = SanPhamInfo.DonGia.ToString();
                 numSoLuongTon.Value = SanPhamInfo.SoLuongTon ?? 0;
                 txtDonViTinh.Text = SanPhamInfo.DonViTinh;
 
@@ -62,7 +62,7 @@ namespace SaleManagementWinApp
                     MaSP = int.Parse(txtMaSP.Text),
                     TenSP = txtTenSP.Text,
                     GiaNhap = decimal.Parse(txtGiaNhap.Text),
-                    GiaBan = decimal.Parse(txtGiaBan.Text),
+                    DonGia = decimal.Parse(txtGiaBan.Text),
                     SoLuongTon = (int)numSoLuongTon.Value,
                     DonViTinh = txtDonViTinh.Text,
                     HanSuDung = dtpHanSuDung.Value,

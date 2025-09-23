@@ -29,72 +29,69 @@
         private void InitializeComponent()
         {
             dgvHangHoa = new DataGridView();
-            dgvCart = new DataGridView();
             label1 = new Label();
-            label2 = new Label();
+            btnRefresh = new Button();
+            btnThoat = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvHangHoa).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgvCart).BeginInit();
             SuspendLayout();
             // 
             // dgvHangHoa
             // 
             dgvHangHoa.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvHangHoa.Location = new Point(28, 58);
+            dgvHangHoa.Location = new Point(24, 44);
+            dgvHangHoa.Margin = new Padding(3, 2, 3, 2);
             dgvHangHoa.Name = "dgvHangHoa";
             dgvHangHoa.RowHeadersWidth = 51;
             dgvHangHoa.RowTemplate.Height = 29;
-            dgvHangHoa.Size = new Size(820, 140);
+            dgvHangHoa.Size = new Size(718, 193);
             dgvHangHoa.TabIndex = 0;
-            dgvHangHoa.CellContentClick += dgvHangHoa_CellContentClick;
-            // 
-            // dgvCart
-            // 
-            dgvCart.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvCart.Location = new Point(28, 250);
-            dgvCart.Name = "dgvCart";
-            dgvCart.RowHeadersWidth = 51;
-            dgvCart.RowTemplate.Height = 29;
-            dgvCart.Size = new Size(820, 188);
-            dgvCart.TabIndex = 1;
-            dgvCart.CellContentClick += dgvCart_CellContentClick;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             label1.ForeColor = Color.GhostWhite;
-            label1.Location = new Point(28, 26);
+            label1.Location = new Point(24, 20);
             label1.Name = "label1";
-            label1.Size = new Size(90, 23);
+            label1.Size = new Size(75, 19);
             label1.TabIndex = 2;
             label1.Text = "Sản phẩm";
             // 
-            // label2
+            // btnRefresh
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.ForeColor = Color.GhostWhite;
-            label2.Location = new Point(28, 215);
-            label2.Name = "label2";
-            label2.Size = new Size(82, 23);
-            label2.TabIndex = 3;
-            label2.Text = "Giỏ hàng";
+            btnRefresh.Location = new Point(161, 270);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(123, 38);
+            btnRefresh.TabIndex = 3;
+            btnRefresh.Text = "Refresh";
+            btnRefresh.UseVisualStyleBackColor = true;
+            btnRefresh.Click += btnRefresh_Click;
+            // 
+            // btnThoat
+            // 
+            btnThoat.Location = new Point(494, 270);
+            btnThoat.Name = "btnThoat";
+            btnThoat.Size = new Size(112, 38);
+            btnThoat.TabIndex = 4;
+            btnThoat.Text = "Thoát";
+            btnThoat.UseVisualStyleBackColor = true;
+            btnThoat.Click += btnThoat_Click;
             // 
             // frmSanPham
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
-            ClientSize = new Size(887, 450);
-            Controls.Add(label2);
+            ClientSize = new Size(776, 338);
+            Controls.Add(btnThoat);
+            Controls.Add(btnRefresh);
             Controls.Add(label1);
-            Controls.Add(dgvCart);
             Controls.Add(dgvHangHoa);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "frmSanPham";
             Text = "frmSanPham";
             Load += frmSanPham_Load;
             ((System.ComponentModel.ISupportInitialize)dgvHangHoa).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvCart).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -102,8 +99,8 @@
         #endregion
 
         private DataGridView dgvHangHoa;
-        private DataGridView dgvCart;
         private Label label1;
-        private Label label2;
+        private Button btnRefresh;
+        private Button btnThoat;
     }
 }

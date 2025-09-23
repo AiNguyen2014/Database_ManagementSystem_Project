@@ -151,7 +151,7 @@ namespace SaleManagementWinApp
                 {
                     MaSP = sp.MaSP,
                     SoLuong = 1,
-                    DonGia = sp.GiaBan
+                    DonGia = sp.DonGia
                 });
             }
 

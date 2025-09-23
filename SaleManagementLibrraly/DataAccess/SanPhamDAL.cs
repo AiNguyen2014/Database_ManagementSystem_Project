@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SaleManagementLibrraly.BussinessObject;
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SaleManagementLibrraly.DataAccess
@@ -27,13 +29,38 @@ namespace SaleManagementLibrraly.DataAccess
         #endregion
 
         // =============================================================
-        // LẤY TẤT CẢ SẢN PHẨM
+        // LẤY TẤT CẢ SẢN PHẨM (TRẢ VỀ DATATABLE)
+        // =============================================================
+        public DataTable GetAllSanPham()
+        {
+            try
+            {
+                string sql = "sp_SanPham_GetAll";
+                DataTable dt = new DataTable();
+                using (IDataReader reader = new StockDataProvider().GetDataReader(sql, CommandType.StoredProcedure, null))
+                {
+                    dt.Load(reader); // Chuyển dữ liệu từ IDataReader sang DataTable
+                }
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách sản phẩm: " + ex.Message);
+            }
+            finally
+            {
+                StockDataProvider.CloseConnection();
+            }
+        }
+
+        // =============================================================
+        // LẤY TẤT CẢ SẢN PHẨM (TRẢ VỀ IENUMERABLE<SANPHAM>)
         // =============================================================
         public IEnumerable<SanPham> GetAll()
         {
             var listSanPham = new List<SanPham>();
-            string SQLSelect = @"SELECT MaSP, TenSP, DonViTinh, GiaNhap, GiaBan, HanSuDung, 
-                                        SoLuongTon, MaLoaiSP, TrangThai, DonGia 
+            string SQLSelect = @"SELECT MaSP, TenSP, DonViTinh, GiaNhap, DonGia, HanSuDung, 
+                                        SoLuongTon, MaLoaiSP, TrangThai 
                                  FROM SanPham";
             try
             {
@@ -46,12 +73,11 @@ namespace SaleManagementLibrraly.DataAccess
                         TenSP = reader.GetString(1),
                         DonViTinh = reader.GetString(2),
                         GiaNhap = reader.GetDecimal(3),
-                        GiaBan = reader.GetDecimal(4),
+                        DonGia = reader.GetDecimal(4),
                         HanSuDung = reader.IsDBNull(5) ? null : reader.GetDateTime(5),
                         SoLuongTon = reader.IsDBNull(6) ? null : reader.GetInt32(6),
                         MaLoaiSP = reader.IsDBNull(7) ? null : reader.GetInt32(7),
-                        TrangThai = reader.IsDBNull(8) ? null : reader.GetString(8),
-                        DonGia = reader.IsDBNull(9) ? null : reader.GetDecimal(9)
+                        TrangThai = reader.IsDBNull(8) ? null : reader.GetString(8)
                     });
                 }
             }
@@ -69,21 +95,26 @@ namespace SaleManagementLibrraly.DataAccess
         {
             try
             {
+                // Kiểm tra ràng buộc DonGia > GiaNhap trước khi thêm
+                if (sp.DonGia <= sp.GiaNhap)
+                {
+                    throw new Exception("Giá bán (DonGia) phải lớn hơn giá nhập (GiaNhap)!");
+                }
+
                 string sqlInsert = @"INSERT INTO SanPham 
-                                    (MaSP, TenSP, DonViTinh, GiaNhap, GiaBan, HanSuDung, SoLuongTon, MaLoaiSP, TrangThai, DonGia) 
-                                     VALUES (@MaSP, @TenSP, @DonViTinh, @GiaNhap, @GiaBan, @HanSuDung, @SoLuongTon, @MaLoaiSP, @TrangThai, @DonGia)";
+                                    (MaSP, TenSP, DonViTinh, GiaNhap, DonGia, HanSuDung, SoLuongTon, MaLoaiSP, TrangThai) 
+                                     VALUES (@MaSP, @TenSP, @DonViTinh, @GiaNhap, @DonGia, @HanSuDung, @SoLuongTon, @MaLoaiSP, @TrangThai)";
                 var parameters = new List<SqlParameter>
                 {
                     StockDataProvider.CreateParameter("@MaSP", 0, sp.MaSP, DbType.Int32),
                     StockDataProvider.CreateParameter("@TenSP", 100, sp.TenSP, DbType.String),
                     StockDataProvider.CreateParameter("@DonViTinh", 20, sp.DonViTinh, DbType.String),
                     StockDataProvider.CreateParameter("@GiaNhap", 0, sp.GiaNhap, DbType.Decimal),
-                    StockDataProvider.CreateParameter("@GiaBan", 0, sp.GiaBan, DbType.Decimal),
+                    StockDataProvider.CreateParameter("@DonGia", 0, sp.DonGia, DbType.Decimal),
                     StockDataProvider.CreateParameter("@HanSuDung", 0, sp.HanSuDung ?? (object)DBNull.Value, DbType.Date),
                     StockDataProvider.CreateParameter("@SoLuongTon", 0, sp.SoLuongTon ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaLoaiSP", 0, sp.MaLoaiSP ?? (object)DBNull.Value, DbType.Int32),
-                    StockDataProvider.CreateParameter("@TrangThai", 20, sp.TrangThai ?? (object)DBNull.Value, DbType.String),
-                    StockDataProvider.CreateParameter("@DonGia", 0, sp.DonGia ?? (object)DBNull.Value, DbType.Decimal),
+                    StockDataProvider.CreateParameter("@TrangThai", 20, sp.TrangThai ?? (object)DBNull.Value, DbType.String)
                 };
                 new StockDataProvider().Insert(sqlInsert, CommandType.Text, parameters.ToArray());
             }
@@ -100,10 +131,16 @@ namespace SaleManagementLibrraly.DataAccess
         {
             try
             {
+                // Kiểm tra ràng buộc DonGia > GiaNhap trước khi cập nhật
+                if (sp.DonGia <= sp.GiaNhap)
+                {
+                    throw new Exception("Giá bán (DonGia) phải lớn hơn giá nhập (GiaNhap)!");
+                }
+
                 string sqlUpdate = @"UPDATE SanPham 
-                                     SET TenSP=@TenSP, DonViTinh=@DonViTinh, GiaNhap=@GiaNhap, GiaBan=@GiaBan, 
+                                     SET TenSP=@TenSP, DonViTinh=@DonViTinh, GiaNhap=@GiaNhap, DonGia=@DonGia, 
                                          HanSuDung=@HanSuDung, SoLuongTon=@SoLuongTon, MaLoaiSP=@MaLoaiSP, 
-                                         TrangThai=@TrangThai, DonGia=@DonGia 
+                                         TrangThai=@TrangThai 
                                      WHERE MaSP = @MaSP";
                 var parameters = new List<SqlParameter>
                 {
@@ -111,12 +148,11 @@ namespace SaleManagementLibrraly.DataAccess
                     StockDataProvider.CreateParameter("@TenSP", 100, sp.TenSP, DbType.String),
                     StockDataProvider.CreateParameter("@DonViTinh", 20, sp.DonViTinh, DbType.String),
                     StockDataProvider.CreateParameter("@GiaNhap", 0, sp.GiaNhap, DbType.Decimal),
-                    StockDataProvider.CreateParameter("@GiaBan", 0, sp.GiaBan, DbType.Decimal),
+                    StockDataProvider.CreateParameter("@DonGia", 0, sp.DonGia, DbType.Decimal),
                     StockDataProvider.CreateParameter("@HanSuDung", 0, sp.HanSuDung ?? (object)DBNull.Value, DbType.Date),
                     StockDataProvider.CreateParameter("@SoLuongTon", 0, sp.SoLuongTon ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaLoaiSP", 0, sp.MaLoaiSP ?? (object)DBNull.Value, DbType.Int32),
-                    StockDataProvider.CreateParameter("@TrangThai", 20, sp.TrangThai ?? (object)DBNull.Value, DbType.String),
-                    StockDataProvider.CreateParameter("@DonGia", 0, sp.DonGia ?? (object)DBNull.Value, DbType.Decimal),
+                    StockDataProvider.CreateParameter("@TrangThai", 20, sp.TrangThai ?? (object)DBNull.Value, DbType.String)
                 };
                 new StockDataProvider().Update(sqlUpdate, CommandType.Text, parameters.ToArray());
             }

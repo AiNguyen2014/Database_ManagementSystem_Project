@@ -8,10 +8,10 @@ namespace SaleManagementLibrraly.DataAccess
     public class StockDataProvider
     {
         private static readonly string connectionString =
-            @"Data Source=localhost;
-              Initial Catalog=QuanLyCuaHangBachHoa;
-              Integrated Security=True;
-              TrustServerCertificate=True";
+            @"Data Source=DESKTOP-9C01I62\SQLEXPRESS;
+      Initial Catalog=QUANLYBACHHOA;
+      Integrated Security=True;
+      TrustServerCertificate=True";
 
         private static SqlConnection? connection;
 
