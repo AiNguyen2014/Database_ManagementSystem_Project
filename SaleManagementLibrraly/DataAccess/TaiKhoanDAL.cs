@@ -47,7 +47,8 @@ namespace SaleManagementLibrraly.DataAccess
             StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String),
         };
 
-                dataReader = dataProvider.GetDataReader(sql, CommandType.Text, parameters);
+                dataReader = new StockDataProvider().GetDataReader(sql, CommandType.Text, parameters);
+
                 if (dataReader.Read())
                 {
                     tk = new TaiKhoan
@@ -61,7 +62,7 @@ namespace SaleManagementLibrraly.DataAccess
                         VaiTro = new VaiTro
                         {
                             MaVaiTro = dataReader.GetInt32(5),
-                            TenVaiTro = dataReader.GetString(6)
+                            TenVaiTro = dataReader.IsDBNull(6) ? null : dataReader.GetString(6)
                         }
                     };
                 }

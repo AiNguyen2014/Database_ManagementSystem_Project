@@ -123,6 +123,44 @@ namespace SaleManagementLibrraly.DataAccess
                 throw new Exception("Lỗi khi xóa nhân viên: " + ex.Message);
             }
         }
-        
+
+        public NhanVien GetNhanVienByID(int maNV)
+        {
+            NhanVien nv = null;
+            // Câu lệnh SQL đúng để lấy thông tin nhân viên và vai trò
+            string SQLSelect = @"SELECT nv.*, vt.TenVaiTro
+                         FROM dbo.NhanVien AS nv
+                         LEFT JOIN dbo.TaiKhoan AS tk ON nv.MaNV = tk.MaNV
+                         LEFT JOIN dbo.VaiTro AS vt ON tk.MaVaiTro = vt.MaVaiTro
+                         WHERE nv.MaNV = @MaNV";
+            try
+            {
+                // Tạo parameter cho MaNV
+                var param = StockDataProvider.CreateParameter("@MaNV", 4, maNV, DbType.Int32);
+
+                using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text, param);
+                if (reader.Read()) // Chỉ cần đọc một dòng vì ID là duy nhất
+                {
+                    nv = new NhanVien
+                    {
+                        MaNV = Convert.ToInt32(reader["MaNV"]),
+                        HoTen = Convert.ToString(reader["HoTen"]),
+                        NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
+                        DiaChi = Convert.ToString(reader["DiaChi"]),
+                        GioiTinh = Convert.ToString(reader["GioiTinh"]),
+                        NgayVaoLam = Convert.ToDateTime(reader["NgayVaoLam"]),
+                        SoDienThoai = Convert.ToString(reader["SoDienThoai"]),
+                        CCCD = Convert.ToString(reader["CCCD"]),
+                        TenVaiTro = reader["TenVaiTro"] == DBNull.Value ? string.Empty : Convert.ToString(reader["TenVaiTro"])
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy thông tin nhân viên theo ID: " + ex.Message);
+            }
+            return nv;
+        }
+
     }
 }

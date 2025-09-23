@@ -24,6 +24,7 @@ namespace SaleManagementWinApp
                 }
 
                 TaiKhoan taiKhoan = TaiKhoanDAL.Instance.CheckLogin(txtDangNhap.Text, txtMatKhau.Text);
+                taiKhoan.TenVaiTro = taiKhoan.VaiTro?.TenVaiTro;
 
                 if (taiKhoan != null) // Nếu tìm thấy tài khoản
                 {
