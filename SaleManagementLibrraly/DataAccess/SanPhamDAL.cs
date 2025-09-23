@@ -32,7 +32,7 @@ namespace SaleManagementLibrraly.DataAccess
         public IEnumerable<SanPham> GetAll()
         {
             var listSanPham = new List<SanPham>();
-            string SQLSelect = @"SELECT MaSP, TenSP, DonViTinh, GiaNhap, GiaBan, HanSuDung, 
+            string SQLSelect = @"SELECT MaSP, TenSP, DonViTinh, GiaNhap, HanSuDung, 
                                         SoLuongTon, MaLoaiSP, TrangThai, DonGia 
                                  FROM SanPham";
             try
@@ -46,7 +46,7 @@ namespace SaleManagementLibrraly.DataAccess
                         TenSP = reader.GetString(1),
                         DonViTinh = reader.GetString(2),
                         GiaNhap = reader.GetDecimal(3),
-                        GiaBan = reader.GetDecimal(4),
+                        
                         HanSuDung = reader.IsDBNull(5) ? null : reader.GetDateTime(5),
                         SoLuongTon = reader.IsDBNull(6) ? null : reader.GetInt32(6),
                         MaLoaiSP = reader.IsDBNull(7) ? null : reader.GetInt32(7),
@@ -143,20 +143,93 @@ namespace SaleManagementLibrraly.DataAccess
             }
         }
 
-        // =============================================================
-        // CẬP NHẬT SỐ LƯỢNG TỒN
-        // =============================================================
+        // PHƯƠNG THỨC 1: Lấy danh sách sản phẩm cho khách hàng xem
+        public IEnumerable<SanPham> GetAllProducts()
+        {
+            var products = new List<SanPham>();
+            IDataReader dataReader = null;
+            try
+            {
+                // Lấy dữ liệu từ cột DonGia nhưng đặt tên tạm là GiaBan để khớp với đối tượng SanPham
+                string sql = @"SELECT sp.MaSP, sp.TenSP, sp.DonViTinh, sp.DonGia AS GiaBan, sp.SoLuongTon, sp.TrangThai, lsp.TenLoaiSP
+                       FROM SanPham AS sp
+                       JOIN LoaiSanPham AS lsp ON sp.MaLoaiSP = lsp.MaLoaiSP
+                       WHERE sp.TrangThai <> N'Ngừng kinh doanh'";
+
+                dataReader = dataProvider.GetDataReader(sql, CommandType.Text, null);
+                while (dataReader.Read())
+                {
+                    products.Add(new SanPham
+                    {
+                        MaSP = dataReader.GetInt32(0),
+                        TenSP = dataReader.GetString(1),
+                        DonViTinh = dataReader.GetString(2),
+                        GiaBan = dataReader.GetDecimal(3),
+                        SoLuongTon = dataReader.GetInt32(4),
+                        TrangThai = dataReader.GetString(5),
+                        TenLoaiSP = dataReader.GetString(6)
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách sản phẩm cho khách hàng: " + ex.Message);
+            }
+            finally
+            {
+                if (dataReader != null) dataReader.Close();
+                CloseConnection();
+            }
+            return products;
+        }
+
+        // PHƯƠNG THỨC 2: Lấy thông tin 1 sản phẩm theo ID (dùng cho giỏ hàng)
+        public SanPham GetSanPhamByID(int maSP)
+        {
+            SanPham sanPham = null;
+            IDataReader dataReader = null;
+            try
+            {
+                string sql = "SELECT MaSP, TenSP, DonViTinh, DonGia AS GiaBan FROM SanPham WHERE MaSP = @MaSP";
+                var parameter = StockDataProvider.CreateParameter("@MaSP", 4, maSP, DbType.Int32);
+                dataReader = dataProvider.GetDataReader(sql, CommandType.Text, parameter);
+                if (dataReader.Read())
+                {
+                    sanPham = new SanPham
+                    {
+                        MaSP = dataReader.GetInt32(dataReader.GetOrdinal("MaSP")),
+                        TenSP = dataReader.GetString(dataReader.GetOrdinal("TenSP")),
+                        DonViTinh = dataReader.GetString(dataReader.GetOrdinal("DonViTinh")),
+                        GiaBan = dataReader.GetDecimal(dataReader.GetOrdinal("GiaBan"))
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy sản phẩm theo ID. Lỗi gốc: " + ex.Message);
+            }
+            finally
+            {
+                if (dataReader != null) dataReader.Close();
+                CloseConnection();
+            }
+            return sanPham;
+        }
+
+        // PHƯƠ-NG THỨC 3: Cập nhật số lượng tồn kho (dùng cho thanh toán)
+        // Đây là hàm của bạn bạn, nhưng mình đã sửa lại cho nhất quán để code của bạn không bị lỗi.
         public void UpdateSoLuongTon(int maSP, int soLuongBan)
         {
             try
             {
                 string sql = "UPDATE SanPham SET SoLuongTon = SoLuongTon - @SoLuongBan WHERE MaSP = @MaSP";
-                var parameters = new List<SqlParameter>
+                var parameters = new[]
                 {
-                    StockDataProvider.CreateParameter("@SoLuongBan", 0, soLuongBan, DbType.Int32),
-                    StockDataProvider.CreateParameter("@MaSP", 0, maSP, DbType.Int32)
-                };
-                new StockDataProvider().Update(sql, CommandType.Text, parameters.ToArray());
+            StockDataProvider.CreateParameter("@SoLuongBan", 0, soLuongBan, DbType.Int32),
+            StockDataProvider.CreateParameter("@MaSP", 0, maSP, DbType.Int32)
+        };
+                // Dùng dataProvider có sẵn thay vì tạo mới
+                dataProvider.ExecuteNonQuery(sql, CommandType.Text, parameters);
             }
             catch (Exception ex)
             {

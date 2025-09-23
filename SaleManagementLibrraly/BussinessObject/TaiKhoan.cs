@@ -15,5 +15,6 @@ namespace SaleManagementLibrraly.BussinessObject
         public string TenVaiTro { get; set; }
         public int? MaNV { get; set; }
         public int? MaKH { get; set; }
+        public VaiTro VaiTro { get; set; }
     }
 }

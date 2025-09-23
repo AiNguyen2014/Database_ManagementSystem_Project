@@ -10,22 +10,7 @@ namespace SaleManagementWinApp
         public frmLogin()
         {
             InitializeComponent();
-        }
-
-        private void frmLogin_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                // Lấy danh sách vai trò từ database và hiển thị lên ComboBox
-                var vaiTroList = VaiTroDAL.Instance.GetAll();
-                cboVaiTro.DataSource = vaiTroList;
-                cboVaiTro.DisplayMember = "TenVaiTro";
-                cboVaiTro.ValueMember = "MaVaiTro";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Không thể tải danh sách vai trò: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            this.Text = "Đăng Nhập";
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)
@@ -37,51 +22,32 @@ namespace SaleManagementWinApp
                     MessageBox.Show("Vui lòng nhập đầy đủ Tên đăng nhập và Mật khẩu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (cboVaiTro.SelectedValue == null)
-                {
-                    MessageBox.Show("Vui lòng chọn Vai trò.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
 
-                errorProvider1?.Clear();
+                TaiKhoan taiKhoan = TaiKhoanDAL.Instance.CheckLogin(txtDangNhap.Text, txtMatKhau.Text);
 
-                // Lấy thông tin từ giao diện
-                string tenDangNhap = txtDangNhap.Text;
-                string matKhau = txtMatKhau.Text;
-                int maVaiTro = (int)cboVaiTro.SelectedValue;
-
-                // Chỉ gọi CheckLogin một lần duy nhất với đủ 3 tham số
-                TaiKhoan taiKhoan = TaiKhoanDAL.Instance.CheckLogin(tenDangNhap, matKhau, maVaiTro);
-
-                if (taiKhoan != null)
+                if (taiKhoan != null) // Nếu tìm thấy tài khoản
                 {
                     this.Hide();
                     MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Kiểm tra vai trò dựa trên TenVaiTro lấy từ DB
-                    if (taiKhoan.TenVaiTro.Trim().Equals("Khách hàng", StringComparison.OrdinalIgnoreCase))
+                    // Hệ thống tự động kiểm tra vai trò từ đối tượng taiKhoan trả về
+                    string tenVaiTro = taiKhoan.VaiTro.TenVaiTro;
+
+                    if (tenVaiTro.Equals("Khách hàng", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Nếu đúng là Khách hàng -> Mở form Khách hàng
-                        frmMainKhachHang f_main_kh = new frmMainKhachHang
-                        {
-                            LoggedInAccount = taiKhoan
-                        };
+                        frmMainKhachHang f_main_kh = new frmMainKhachHang { LoggedInAccount = taiKhoan };
                         f_main_kh.ShowDialog();
                     }
-                    else
+                    else // Các vai trò còn lại là của nhân viên/quản lý
                     {
-                        // Nếu là bất kỳ vai trò nào khác (Quản lý, NV Bán hàng, NV Kho) -> Mở form Nhân viên
-                        frmMainNhanVien f_main_nv = new frmMainNhanVien
-                        {
-                            LoggedInAccount = taiKhoan
-                        };
+                        frmMainNhanVien f_main_nv = new frmMainNhanVien { LoggedInAccount = taiKhoan };
                         f_main_nv.ShowDialog();
                     }
                     this.Close();
                 }
-                else
+                else // Nếu không tìm thấy
                 {
-                    MessageBox.Show("Tên đăng nhập, mật khẩu hoặc vai trò không chính xác.", "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không chính xác.", "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
