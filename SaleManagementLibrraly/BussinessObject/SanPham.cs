@@ -18,5 +18,6 @@ namespace SaleManagementLibrraly.BussinessObject
         public int? MaLoaiSP { get; set; }
         public string TrangThai { get; set; }
         public decimal? DonGia { get; set; }
+        public string TenLoaiSP { get; set; }
     }
 }

@@ -30,37 +30,39 @@ namespace SaleManagementLibrraly.DataAccess
         // HÀM KIỂM TRA ĐĂNG NHẬP
         // =============================================================
         // Sửa lại phương thức CheckLogin trong TaiKhoanDAL.cs
-        public TaiKhoan CheckLogin(string tenDangNhap, string matKhau, int maVaiTro)
+        public TaiKhoan CheckLogin(string tenDangNhap, string matKhau)
         {
-            TaiKhoan taiKhoan = null;
-            string SQLSelect = @"SELECT tk.*, vt.TenVaiTro 
-                         FROM TaiKhoan tk 
-                         JOIN VaiTro vt ON tk.MaVaiTro = vt.MaVaiTro
-                         WHERE TenDangNhap = @TenDangNhap 
-                           AND MatKhau = @MatKhau 
-                           AND tk.MaVaiTro = @MaVaiTro"; // Thêm điều kiện kiểm tra vai trò
+            TaiKhoan tk = null;
+            IDataReader dataReader = null;
             try
             {
+                string sql = @"SELECT tk.MaTaiKhoan, tk.TenDangNhap, tk.MatKhau, tk.MaNV, tk.MaKH, vt.MaVaiTro, vt.TenVaiTro 
+                       FROM dbo.TaiKhoan AS tk 
+                       JOIN dbo.VaiTro AS vt ON tk.MaVaiTro = vt.MaVaiTro
+                       WHERE tk.TenDangNhap = @TenDangNhap AND tk.MatKhau = @MatKhau COLLATE Vietnamese_CS_AS";
+
                 var parameters = new[]
                 {
             StockDataProvider.CreateParameter("@TenDangNhap", 50, tenDangNhap, DbType.String),
             StockDataProvider.CreateParameter("@MatKhau", 50, matKhau, DbType.String),
-            StockDataProvider.CreateParameter("@MaVaiTro", 4, maVaiTro, DbType.Int32) // Thêm parameter mới
         };
 
-                using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text, parameters);
-                if (reader.Read())
+                dataReader = dataProvider.GetDataReader(sql, CommandType.Text, parameters);
+                if (dataReader.Read())
                 {
-                    // Code map dữ liệu giữ nguyên
-                    taiKhoan = new TaiKhoan
+                    tk = new TaiKhoan
                     {
-                        MaTaiKhoan = Convert.ToInt32(reader["MaTaiKhoan"]),
-                        TenDangNhap = reader["TenDangNhap"].ToString(),
-                        MatKhau = reader["MatKhau"].ToString(),
-                        MaVaiTro = Convert.ToInt32(reader["MaVaiTro"]),
-                        TenVaiTro = reader["TenVaiTro"].ToString(),
-                        MaNV = reader["MaNV"] == DBNull.Value ? null : Convert.ToInt32(reader["MaNV"]),
-                        MaKH = reader["MaKH"] == DBNull.Value ? null : Convert.ToInt32(reader["MaKH"])
+                        MaTaiKhoan = dataReader.GetInt32(0),
+                        TenDangNhap = dataReader.GetString(1),
+                        MatKhau = dataReader.GetString(2),
+                        MaNV = dataReader.IsDBNull(3) ? null : dataReader.GetInt32(3),
+                        MaKH = dataReader.IsDBNull(4) ? null : dataReader.GetInt32(4),
+                        MaVaiTro = dataReader.IsDBNull(5) ? null : dataReader.GetInt32(5),
+                        VaiTro = new VaiTro
+                        {
+                            MaVaiTro = dataReader.GetInt32(5),
+                            TenVaiTro = dataReader.GetString(6)
+                        }
                     };
                 }
             }
@@ -68,7 +70,12 @@ namespace SaleManagementLibrraly.DataAccess
             {
                 throw new Exception("Lỗi khi kiểm tra đăng nhập: " + ex.Message);
             }
-            return taiKhoan;
+            finally
+            {
+                if (dataReader != null) dataReader.Close();
+                CloseConnection();
+            }
+            return tk;
         }
 
         // =============================================================

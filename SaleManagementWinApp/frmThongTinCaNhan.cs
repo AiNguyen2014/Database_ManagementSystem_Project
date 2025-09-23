@@ -63,10 +63,7 @@ namespace SaleManagementWinApp
                     }
 
                     // SỬA LẠI: Gọi CheckLogin với đủ 3 tham số
-                    TaiKhoan tk = TaiKhoanDAL.Instance.CheckLogin(
-                        LoggedInAccount.TenDangNhap,
-                        txtMatKhauCu.Text,
-                        (int)LoggedInAccount.MaVaiTro); // Thêm MaVaiTro vào
+                    TaiKhoan tk = TaiKhoanDAL.Instance.CheckLogin(LoggedInAccount.TenDangNhap, txtMatKhauCu.Text);
 
                     if (tk == null)
                     {
