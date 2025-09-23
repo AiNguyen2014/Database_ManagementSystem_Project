@@ -43,8 +43,10 @@ namespace SaleManagementLibrraly.DataAccess
                     },
                     StockDataProvider.CreateParameter("@MaKH", 0, hd.MaKH ?? (object)DBNull.Value, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaNV", 0, hd.MaNV ?? (object)DBNull.Value, DbType.Int32),
-                    StockDataProvider.CreateParameter("@NgayLap", 0, hd.NgayLap == default(DateTime) ? DateTime.Now : hd.NgayLap, DbType.Date)
-                };
+                    StockDataProvider.CreateParameter("@NgayLap", 0, hd.NgayLap == default(DateTime) ? DateTime.Now : hd.NgayLap, DbType.Date),
+                    StockDataProvider.CreateParameter("@TongTien", 0, hd.TongTien, DbType.Decimal)
+
+                }; 
 
                 dataProvider.Insert(procedureName, CommandType.StoredProcedure, parameters.ToArray());
 
