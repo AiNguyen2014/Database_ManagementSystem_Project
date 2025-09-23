@@ -106,7 +106,6 @@
             dgvND.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvND.Size = new Size(720, 251);
             dgvND.TabIndex = 19;
-            //dgvND.CellClick += dgvND_CellClick;
             dgvND.CellDoubleClick += dgvND_CellDoubleClick;
             // 
             // txtSearchND
@@ -139,7 +138,6 @@
             lblQLND.Size = new Size(288, 37);
             lblQLND.TabIndex = 16;
             lblQLND.Text = "QUẢN LÝ TÀI KHOẢN";
-            //lblQLND.Click += this.lblQLND_Click;
             // 
             // frmTaiKhoan
             // 
@@ -158,7 +156,6 @@
             Name = "frmTaiKhoan";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Quản Lý Tài Khoản";
-            //Load += frmNguoiDung_Load;
             ((System.ComponentModel.ISupportInitialize)dgvND).EndInit();
             ResumeLayout(false);
             PerformLayout();

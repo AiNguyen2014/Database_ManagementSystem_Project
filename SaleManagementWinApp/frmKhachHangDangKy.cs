@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SaleManagementLibrraly.BussinessObject;
+using SaleManagementLibrraly.DataAccess;
+using System;
 using System.Windows.Forms;
 
-using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.DataAccess;
 namespace SaleManagementWinApp
 {
     public partial class frmKhachHangDangKy : Form
@@ -21,13 +14,7 @@ namespace SaleManagementWinApp
 
         private void frmKhachHangDangKy_Load(object sender, EventArgs e)
         {
-            // Mặc định chọn giới tính là Nam
-            cboGioiTinh.SelectedIndex = 0;
-        }
-
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            this.Close();
+            cboGioiTinh.SelectedIndex = 0; // Mặc định chọn Nam
         }
 
         private void btnDangKy_Click(object sender, EventArgs e)
@@ -75,24 +62,23 @@ namespace SaleManagementWinApp
                 // Thêm khách hàng và lấy lại MaKH vừa tạo
                 int newMaKH = KhachHangDAL.Instance.AddNew(khachHang);
 
-                // 4. Tạo đối tượng TaiKhoan và lưu vào DB
+                // Tạo đối tượng TaiKhoan
                 var taiKhoan = new TaiKhoan
                 {
                     TenDangNhap = txtTenDangNhap.Text,
-                    MatKhau = txtMatKhau.Text, // Nhớ mã hóa mật khẩu trong dự án thực tế
-                    VaiTro = "KhachHang", // Tự động gán vai trò
-                    MaKH = newMaKH // Liên kết với khách hàng vừa tạo
+                    MatKhau = txtMatKhau.Text,
+                    // SỬA LẠI: Gán MaVaiTro của KhachHang (giả sử là 4)
+                    MaVaiTro = 4,
+                    MaKH = newMaKH
                 };
                 TaiKhoanDAL.Instance.AddNew(taiKhoan);
 
-                // 5. Thông báo thành công
-                MessageBox.Show("Đăng ký tài khoản thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
+                MessageBox.Show("Đăng ký tài khoản thành công!", "Thành công");
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Đã xảy ra lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Đã xảy ra lỗi: " + ex.Message, "Lỗi");
             }
         }
     }

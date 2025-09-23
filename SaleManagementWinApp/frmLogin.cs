@@ -1,5 +1,5 @@
 ﻿using SaleManagementLibrraly.BussinessObject;
-using SaleManagementLibrraly.DataAccess; // SỬA: Dùng DataAccess thay vì Repository
+using SaleManagementLibrraly.DataAccess;
 using System;
 using System.Windows.Forms;
 
@@ -7,54 +7,49 @@ namespace SaleManagementWinApp
 {
     public partial class frmLogin : Form
     {
-        
         public frmLogin()
         {
             InitializeComponent();
+            this.Text = "Đăng Nhập";
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)
         {
             try
             {
-                // Giữ lại phần kiểm tra dữ liệu trống, rất tốt!
-                if (string.IsNullOrEmpty(txtDangNhap.Text))
+                if (string.IsNullOrEmpty(txtDangNhap.Text) || string.IsNullOrEmpty(txtMatKhau.Text))
                 {
-                    errorProvider1?.SetError(txtDangNhap, "Vui lòng nhập tên đăng nhập");
+                    MessageBox.Show("Vui lòng nhập đầy đủ Tên đăng nhập và Mật khẩu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (string.IsNullOrEmpty(txtMatKhau.Text))
-                {
-                    errorProvider1?.SetError(txtMatKhau, "Vui lòng nhập mật khẩu");
-                    return;
-                }
-
-                errorProvider1?.Clear();
 
                 TaiKhoan taiKhoan = TaiKhoanDAL.Instance.CheckLogin(txtDangNhap.Text, txtMatKhau.Text);
+                taiKhoan.TenVaiTro = taiKhoan.VaiTro?.TenVaiTro;
 
                 if (taiKhoan != null) // Nếu tìm thấy tài khoản
                 {
-                    this.Hide(); // Ẩn form login đi
-
+                    this.Hide();
                     MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                    // Hệ thống tự động kiểm tra vai trò từ đối tượng taiKhoan trả về
+                    string tenVaiTro = taiKhoan.VaiTro.TenVaiTro;
 
-                    if (taiKhoan.VaiTro.Equals("NhanVien", StringComparison.OrdinalIgnoreCase))
+                    if (tenVaiTro.Equals("Khách hàng", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Mở form chính cho nhân viên/quản trị
-                        frmMain f_main = new frmMain();
-                        f_main.ShowDialog(); // Dùng ShowDialog để form chính đóng thì ứng dụng mới thoát
-                    }
-                    else if (taiKhoan.VaiTro.Equals("KhachHang", StringComparison.OrdinalIgnoreCase))
-                    {
-                        frmMainKhachHang f_main_kh = new frmMainKhachHang
-                        {
-                            LoggedInAccount = taiKhoan // Gán thông tin tài khoản vào property của form main
-                        };
+                        frmMainKhachHang f_main_kh = new frmMainKhachHang { LoggedInAccount = taiKhoan };
                         f_main_kh.ShowDialog();
                     }
-                    this.Close(); // Sau khi form chính đóng, đóng luôn form login
+                    else
+                    {
+                        // Nếu là bất kỳ vai trò nào khác (Quản lý, NV Bán hàng, NV Kho) -> Mở form Nhân viên
+                        frmMainNhanVien f_main_nv = new frmMainNhanVien()
+                        {
+                            LoggedInAccount = taiKhoan
+                        };
+                        f_main_nv.ShowDialog(); 
+                        
+                    }
+                    this.Close();
                 }
                 else // Nếu không tìm thấy
                 {

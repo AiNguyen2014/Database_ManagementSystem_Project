@@ -13,10 +13,7 @@ namespace SaleManagementLibrraly.BussinessObject
         public int? MaSP { get; set; }
         public int? SoLuong { get; set; }
         public decimal? DonGia { get; set; }
-
-        // Thuộc tính này tự tính toán giống như trong database
-        public decimal? ThanhTien => SoLuong * DonGia;
-
-        public decimal? ThanhTienSauGiam { get; set; }
+        public decimal? ThanhTien { get; set; }
+        public string TenSanPham { get; set; }
     }
 }

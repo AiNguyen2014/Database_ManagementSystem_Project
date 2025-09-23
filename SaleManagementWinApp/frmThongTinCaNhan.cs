@@ -7,7 +7,6 @@ namespace SaleManagementWinApp
 {
     public partial class frmThongTinCaNhan : Form
     {
-        // Property để nhận thông tin tài khoản từ form Main
         public TaiKhoan LoggedInAccount { get; set; }
         private KhachHang currentKhachHang;
 
@@ -18,7 +17,6 @@ namespace SaleManagementWinApp
 
         private void frmThongTinCaNhan_Load(object sender, EventArgs e)
         {
-            // Khi form được tải, lấy thông tin khách hàng và hiển thị
             LoadKhachHangInfo();
         }
 
@@ -26,27 +24,20 @@ namespace SaleManagementWinApp
         {
             try
             {
-                // Dùng MaKH từ tài khoản đăng nhập để lấy thông tin khách hàng tương ứng
                 if (LoggedInAccount != null && LoggedInAccount.MaKH.HasValue)
                 {
                     currentKhachHang = KhachHangDAL.Instance.GetKhachHangByID(LoggedInAccount.MaKH.Value);
                     if (currentKhachHang != null)
                     {
-                        // Đổ dữ liệu vào các ô textbox
                         txtHoTen.Text = currentKhachHang.Hoten;
                         txtDiaChi.Text = currentKhachHang.DiaChi;
                         txtSoDienThoai.Text = currentKhachHang.SoDienThoai;
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Không có thông tin tài khoản để hiển thị.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi tải thông tin cá nhân: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi tải thông tin cá nhân: " + ex.Message);
             }
         }
 
@@ -56,29 +47,49 @@ namespace SaleManagementWinApp
             {
                 if (currentKhachHang == null) return;
 
-                // Lấy dữ liệu mới từ các textbox
-                var updatedKhachHang = new KhachHang
+                // Cập nhật thông tin Khách hàng
+                currentKhachHang.Hoten = txtHoTen.Text;
+                currentKhachHang.DiaChi = txtDiaChi.Text;
+                currentKhachHang.SoDienThoai = txtSoDienThoai.Text;
+                KhachHangDAL.Instance.Update(currentKhachHang);
+
+                // Đổi mật khẩu nếu người dùng nhập vào
+                if (!string.IsNullOrWhiteSpace(txtMatKhauMoi.Text))
                 {
-                    MaKH = currentKhachHang.MaKH, // Giữ lại MaKH cũ
-                    Hoten = txtHoTen.Text,
-                    DiaChi = txtDiaChi.Text,
-                    SoDienThoai = txtSoDienThoai.Text,
-                    GioiTinh = currentKhachHang.GioiTinh // Giả định không thay đổi giới tính ở form này
-                };
+                    if (string.IsNullOrWhiteSpace(txtMatKhauCu.Text))
+                    {
+                        MessageBox.Show("Vui lòng nhập mật khẩu cũ để xác nhận.", "Yêu cầu");
+                        return;
+                    }
 
-                // Gọi hàm DAL để gọi Stored Procedure
-                KhachHangDAL.Instance.UpdateThongTin(updatedKhachHang);
+                    // SỬA LẠI: Gọi CheckLogin với đủ 3 tham số
+                    TaiKhoan tk = TaiKhoanDAL.Instance.CheckLogin(LoggedInAccount.TenDangNhap, txtMatKhauCu.Text);
 
-                MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (tk == null)
+                    {
+                        MessageBox.Show("Mật khẩu cũ không chính xác!", "Lỗi");
+                        return;
+                    }
+
+                    if (txtMatKhauMoi.Text != txtXacNhanMK.Text)
+                    {
+                        MessageBox.Show("Mật khẩu mới và xác nhận không khớp!", "Lỗi");
+                        return;
+                    }
+
+                    TaiKhoanDAL.Instance.ChangePassword(LoggedInAccount.TenDangNhap, txtMatKhauMoi.Text);
+                }
+
+                MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo");
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi lưu thay đổi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi khi lưu thay đổi: " + ex.Message);
             }
         }
 
-        private void btnThoat_Click(object sender, EventArgs e)
+private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();
         }

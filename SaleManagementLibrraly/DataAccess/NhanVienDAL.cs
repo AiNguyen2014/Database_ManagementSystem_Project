@@ -4,7 +4,7 @@ using System.Data;
 
 namespace SaleManagementLibrraly.DataAccess
 {
-    public class NhanVienDAL : BaseDAL
+    public class NhanVienDAL
     {
         #region Singleton
         private static NhanVienDAL? instance = null;
@@ -16,26 +16,21 @@ namespace SaleManagementLibrraly.DataAccess
             {
                 lock (instanceLock)
                 {
-                    if (instance == null)
-                    {
-                        instance = new NhanVienDAL();
-                    }
+                    if (instance == null) instance = new NhanVienDAL();
                     return instance;
                 }
             }
         }
         #endregion
 
-        // =============================================================
-        // LẤY DANH SÁCH NHÂN VIÊN
-        // =============================================================
         public IEnumerable<NhanVien> GetAll()
         {
             var listNhanVien = new List<NhanVien>();
-            string SQLSelect = @"SELECT MaNV, HoTen, NgaySinh, DiaChi, GioiTinh, 
-                                        NgayVaoLam, SoDienThoai, ChucVu, CCCD 
-                                 FROM NhanVien";
-
+            string SQLSelect = @"SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.DiaChi, nv.GioiTinh, 
+                                        nv.NgayVaoLam, nv.SoDienThoai, nv.CCCD, vt.TenVaiTro
+                                 FROM NhanVien nv
+                                 LEFT JOIN TaiKhoan tk ON nv.MaNV = tk.MaNV
+                                 LEFT JOIN VaiTro vt ON tk.MaVaiTro = vt.MaVaiTro";
             try
             {
                 using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text);
@@ -43,15 +38,16 @@ namespace SaleManagementLibrraly.DataAccess
                 {
                     listNhanVien.Add(new NhanVien
                     {
-                        MaNV = reader.GetInt32(0),
-                        HoTen = reader.GetString(1),
-                        NgaySinh = reader.GetDateTime(2),
-                        DiaChi = reader.GetString(3),
-                        GioiTinh = reader.GetString(4),
-                        NgayVaoLam = reader.GetDateTime(5),
-                        SoDienThoai = reader.GetString(6),
-                        ChucVu = reader.GetString(7),
-                        CCCD = reader.GetString(8)
+                        // SỬA LẠI CÁCH ĐỌC DỮ LIỆU
+                        MaNV = Convert.ToInt32(reader["MaNV"]),
+                        HoTen = Convert.ToString(reader["HoTen"]),
+                        NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
+                        DiaChi = Convert.ToString(reader["DiaChi"]),
+                        GioiTinh = Convert.ToString(reader["GioiTinh"]),
+                        NgayVaoLam = Convert.ToDateTime(reader["NgayVaoLam"]),
+                        SoDienThoai = Convert.ToString(reader["SoDienThoai"]),
+                        CCCD = Convert.ToString(reader["CCCD"]),
+                        TenVaiTro = reader["TenVaiTro"] == DBNull.Value ? string.Empty : Convert.ToString(reader["TenVaiTro"])
                     });
                 }
             }
@@ -62,19 +58,13 @@ namespace SaleManagementLibrraly.DataAccess
             return listNhanVien;
         }
 
-        // =============================================================
-        // THÊM NHÂN VIÊN
-        // =============================================================
         public void AddNew(NhanVien nv)
         {
             try
             {
-                string sqlInsert = @"INSERT INTO NhanVien 
-                                    (HoTen, NgaySinh, DiaChi, GioiTinh, NgayVaoLam, 
-                                     SoDienThoai, ChucVu, CCCD) 
-                                     VALUES (@HoTen, @NgaySinh, @DiaChi, @GioiTinh, 
-                                             @NgayVaoLam, @SoDienThoai, @ChucVu, @CCCD)";
-                var parameters = new List<SqlParameter>
+                string sqlInsert = @"INSERT INTO NhanVien (HoTen, NgaySinh, DiaChi, GioiTinh, NgayVaoLam, SoDienThoai, CCCD) 
+                                     VALUES (@HoTen, @NgaySinh, @DiaChi, @GioiTinh, @NgayVaoLam, @SoDienThoai, @CCCD)";
+                var parameters = new[]
                 {
                     StockDataProvider.CreateParameter("@HoTen", 100, nv.HoTen, DbType.String),
                     StockDataProvider.CreateParameter("@NgaySinh", 0, nv.NgaySinh, DbType.Date),
@@ -82,10 +72,9 @@ namespace SaleManagementLibrraly.DataAccess
                     StockDataProvider.CreateParameter("@GioiTinh", 5, nv.GioiTinh, DbType.String),
                     StockDataProvider.CreateParameter("@NgayVaoLam", 0, nv.NgayVaoLam, DbType.Date),
                     StockDataProvider.CreateParameter("@SoDienThoai", 15, nv.SoDienThoai, DbType.String),
-                    StockDataProvider.CreateParameter("@ChucVu", 50, nv.ChucVu, DbType.String),
                     StockDataProvider.CreateParameter("@CCCD", 20, nv.CCCD, DbType.String)
                 };
-                new StockDataProvider().Insert(sqlInsert, CommandType.Text, parameters.ToArray());
+                new StockDataProvider().Insert(sqlInsert, CommandType.Text, parameters);
             }
             catch (Exception ex)
             {
@@ -93,9 +82,6 @@ namespace SaleManagementLibrraly.DataAccess
             }
         }
 
-        // =============================================================
-        // CẬP NHẬT NHÂN VIÊN
-        // =============================================================
         public void Update(NhanVien nv)
         {
             try
@@ -103,7 +89,7 @@ namespace SaleManagementLibrraly.DataAccess
                 string sqlUpdate = @"UPDATE NhanVien 
                                      SET HoTen=@HoTen, NgaySinh=@NgaySinh, DiaChi=@DiaChi, 
                                          GioiTinh=@GioiTinh, NgayVaoLam=@NgayVaoLam, 
-                                         SoDienThoai=@SoDienThoai, ChucVu=@ChucVu, CCCD=@CCCD 
+                                         SoDienThoai=@SoDienThoai, CCCD=@CCCD 
                                      WHERE MaNV = @MaNV";
                 var parameters = new List<SqlParameter>
                 {
@@ -114,7 +100,6 @@ namespace SaleManagementLibrraly.DataAccess
                     StockDataProvider.CreateParameter("@GioiTinh", 5, nv.GioiTinh, DbType.String),
                     StockDataProvider.CreateParameter("@NgayVaoLam", 0, nv.NgayVaoLam, DbType.Date),
                     StockDataProvider.CreateParameter("@SoDienThoai", 15, nv.SoDienThoai, DbType.String),
-                    StockDataProvider.CreateParameter("@ChucVu", 50, nv.ChucVu, DbType.String),
                     StockDataProvider.CreateParameter("@CCCD", 20, nv.CCCD, DbType.String)
                 };
                 new StockDataProvider().Update(sqlUpdate, CommandType.Text, parameters.ToArray());
@@ -125,9 +110,6 @@ namespace SaleManagementLibrraly.DataAccess
             }
         }
 
-        // =============================================================
-        // XÓA NHÂN VIÊN
-        // =============================================================
         public void Delete(int maNV)
         {
             try
@@ -141,5 +123,44 @@ namespace SaleManagementLibrraly.DataAccess
                 throw new Exception("Lỗi khi xóa nhân viên: " + ex.Message);
             }
         }
+
+        public NhanVien GetNhanVienByID(int maNV)
+        {
+            NhanVien nv = null;
+            // Câu lệnh SQL đúng để lấy thông tin nhân viên và vai trò
+            string SQLSelect = @"SELECT nv.*, vt.TenVaiTro
+                         FROM dbo.NhanVien AS nv
+                         LEFT JOIN dbo.TaiKhoan AS tk ON nv.MaNV = tk.MaNV
+                         LEFT JOIN dbo.VaiTro AS vt ON tk.MaVaiTro = vt.MaVaiTro
+                         WHERE nv.MaNV = @MaNV";
+            try
+            {
+                // Tạo parameter cho MaNV
+                var param = StockDataProvider.CreateParameter("@MaNV", 4, maNV, DbType.Int32);
+
+                using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text, param);
+                if (reader.Read()) // Chỉ cần đọc một dòng vì ID là duy nhất
+                {
+                    nv = new NhanVien
+                    {
+                        MaNV = Convert.ToInt32(reader["MaNV"]),
+                        HoTen = Convert.ToString(reader["HoTen"]),
+                        NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
+                        DiaChi = Convert.ToString(reader["DiaChi"]),
+                        GioiTinh = Convert.ToString(reader["GioiTinh"]),
+                        NgayVaoLam = Convert.ToDateTime(reader["NgayVaoLam"]),
+                        SoDienThoai = Convert.ToString(reader["SoDienThoai"]),
+                        CCCD = Convert.ToString(reader["CCCD"]),
+                        TenVaiTro = reader["TenVaiTro"] == DBNull.Value ? string.Empty : Convert.ToString(reader["TenVaiTro"])
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy thông tin nhân viên theo ID: " + ex.Message);
+            }
+            return nv;
+        }
+
     }
 }

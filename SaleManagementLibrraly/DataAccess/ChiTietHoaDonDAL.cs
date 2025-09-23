@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SaleManagementLibrraly.BussinessObject;
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SaleManagementLibrraly.DataAccess
@@ -26,26 +28,69 @@ namespace SaleManagementLibrraly.DataAccess
         }
         #endregion
 
-        // Hàm để thêm một dòng chi tiết vào hóa đơn
+        /// <summary>
+        /// Thêm một dòng chi tiết vào hóa đơn. Phương thức này đã đúng và không cần sửa.
+        /// </summary>
         public void AddNew(ChiTietHoaDon cthd)
         {
             try
             {
-                // Giả định MaCTHD không phải là tự tăng
-                string sqlInsert = "INSERT INTO ChiTietHoaDon (MaCTHD, MaHD, MaSP, SoLuong, DonGia) VALUES (@MaCTHD, @MaHD, @MaSP, @SoLuong, @DonGia)";
+                string procedureName = "sp_ThemChiTietHoaDon";
                 var parameters = new List<SqlParameter>
                 {
-                    StockDataProvider.CreateParameter("@MaCTHD", 0, cthd.MaCTHD, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaHD", 0, cthd.MaHD, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaSP", 0, cthd.MaSP, DbType.Int32),
                     StockDataProvider.CreateParameter("@SoLuong", 0, cthd.SoLuong, DbType.Int32),
-                    StockDataProvider.CreateParameter("@DonGia", 0, cthd.DonGia, DbType.Decimal)
                 };
-                dataProvider.Insert(sqlInsert, CommandType.Text, parameters.ToArray());
+                dataProvider.Insert(procedureName, CommandType.StoredProcedure, parameters.ToArray());
             }
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi thêm chi tiết hóa đơn: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        /// <summary>
+        /// Lấy danh sách chi tiết hóa đơn từ view.
+        /// </summary>
+        public List<ChiTietHoaDon> GetChiTietHoaDonByMaHD(int maHD)
+        {
+            try
+            {
+                // SỬA LỖI Ở ĐÂY: Chỉ SELECT các cột có trong lớp ChiTietHoaDon.cs
+                string sql = "SELECT MaCTHD, MaHD, MaSP, SoLuong, DonGia, ThanhTien, TenSanPham FROM vw_ChiTietHoaDonDayDu WHERE MaHD = @MaHD";
+                var parameters = new List<SqlParameter>
+                {
+                    StockDataProvider.CreateParameter("@MaHD", 4, maHD, DbType.Int32)
+                };
+
+                var chiTietList = new List<ChiTietHoaDon>();
+                using (var reader = dataProvider.GetDataReader(sql, CommandType.Text, parameters.ToArray()))
+                {
+                    while (reader.Read())
+                    {
+                        // SỬA LỖI Ở ĐÂY: Chỉ gán các thuộc tính tồn tại trong lớp ChiTietHoaDon
+                        chiTietList.Add(new ChiTietHoaDon
+                        {
+                            MaCTHD = reader.GetInt32(reader.GetOrdinal("MaCTHD")),
+                            MaHD = reader.GetInt32(reader.GetOrdinal("MaHD")),
+                            MaSP = reader.GetInt32(reader.GetOrdinal("MaSP")),
+                            SoLuong = reader.GetInt32(reader.GetOrdinal("SoLuong")),
+                            DonGia = reader.GetDecimal(reader.GetOrdinal("DonGia")),
+                            ThanhTien = reader.GetDecimal(reader.GetOrdinal("ThanhTien")),
+                            TenSanPham = reader["TenSanPham"].ToString()
+                        });
+                    }
+                }
+                return chiTietList;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy chi tiết hóa đơn: " + ex.Message);
             }
             finally
             {

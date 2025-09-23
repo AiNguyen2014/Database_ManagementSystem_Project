@@ -13,6 +13,8 @@ namespace SaleManagementLibrraly.DataAccess
       Integrated Security=True;
       TrustServerCertificate=True";
 
+
+
         private static SqlConnection? connection;
 
         // Hàm lấy connection (mở nếu chưa mở)
@@ -65,7 +67,7 @@ namespace SaleManagementLibrraly.DataAccess
             return cmd.ExecuteReader(); // Khi DataReader đóng => connection sẽ tự giải phóng
         }
 
-        private void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public void ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             using var connection = new SqlConnection(connectionString);
             connection.Open();
@@ -89,6 +91,28 @@ namespace SaleManagementLibrraly.DataAccess
                 command.Parameters.AddRange(parameters);
             result = command.ExecuteScalar();
             return result ?? DBNull.Value;
+        }
+        public DataTable ExecuteQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters);
+                    }
+
+                    using (var adapter = new SqlDataAdapter(command))
+                    {
+                        adapter.Fill(table);
+                    }
+                }
+            }
+            return table;
         }
 
         public void Insert(string commandText, CommandType commandType, params SqlParameter[] parameters)

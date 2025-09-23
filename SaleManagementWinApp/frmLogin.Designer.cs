@@ -45,7 +45,7 @@
             btnDangNhap.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnDangNhap.ForeColor = Color.Purple;
             btnDangNhap.Image = (Image)resources.GetObject("btnDangNhap.Image");
-            btnDangNhap.Location = new Point(112, 230);
+            btnDangNhap.Location = new Point(108, 274);
             btnDangNhap.Name = "btnDangNhap";
             btnDangNhap.Size = new Size(140, 41);
             btnDangNhap.TabIndex = 3;
@@ -111,7 +111,7 @@
             btnThoat.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             btnThoat.ForeColor = Color.Purple;
             btnThoat.Image = (Image)resources.GetObject("btnThoat.Image");
-            btnThoat.Location = new Point(306, 230);
+            btnThoat.Location = new Point(302, 274);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(120, 41);
             btnThoat.TabIndex = 4;
@@ -125,7 +125,7 @@
             linkLabelDangKyNgay.AutoSize = true;
             linkLabelDangKyNgay.BackColor = Color.White;
             linkLabelDangKyNgay.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
-            linkLabelDangKyNgay.Location = new Point(47, 284);
+            linkLabelDangKyNgay.Location = new Point(43, 328);
             linkLabelDangKyNgay.Name = "linkLabelDangKyNgay";
             linkLabelDangKyNgay.Size = new Size(277, 23);
             linkLabelDangKyNgay.TabIndex = 5;
@@ -146,7 +146,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
-            ClientSize = new Size(482, 325);
+            ClientSize = new Size(583, 377);
             Controls.Add(label1);
             Controls.Add(linkLabelDangKyNgay);
             Controls.Add(btnThoat);
@@ -175,5 +175,7 @@
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private LinkLabel linkLabelDangKyNgay;
         private Label label1;
+        private Label label2;
+        private ComboBox cboVaiTro;
     }
 }
