@@ -38,8 +38,6 @@
             btnThoat = new Button();
             linkLabelDangKyNgay = new LinkLabel();
             label1 = new Label();
-            label2 = new Label();
-            cboVaiTro = new ComboBox();
             SuspendLayout();
             // 
             // btnDangNhap
@@ -143,33 +141,12 @@
             label1.Size = new Size(0, 20);
             label1.TabIndex = 6;
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.ForeColor = Color.GhostWhite;
-            label2.Location = new Point(43, 230);
-            label2.Name = "label2";
-            label2.Size = new Size(63, 23);
-            label2.TabIndex = 7;
-            label2.Text = "Vai trò";
-            // 
-            // cboVaiTro
-            // 
-            cboVaiTro.FormattingEnabled = true;
-            cboVaiTro.Location = new Point(139, 227);
-            cboVaiTro.Name = "cboVaiTro";
-            cboVaiTro.Size = new Size(151, 28);
-            cboVaiTro.TabIndex = 9;
-            // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
             ClientSize = new Size(583, 377);
-            Controls.Add(cboVaiTro);
-            Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(linkLabelDangKyNgay);
             Controls.Add(btnThoat);
@@ -182,7 +159,6 @@
             Name = "frmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
-            Load += frmLogin_Load;
             ResumeLayout(false);
             PerformLayout();
         }

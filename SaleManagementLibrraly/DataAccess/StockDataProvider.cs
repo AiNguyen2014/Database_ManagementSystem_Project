@@ -11,6 +11,7 @@ namespace SaleManagementLibrraly.DataAccess
             @"Data Source=localhost;Initial Catalog=QuanLyCuaHangBachHoa;Integrated Security=True; TrustServerCertificate=True";
 
 
+
         private static SqlConnection? connection;
 
         // Hàm lấy connection (mở nếu chưa mở)

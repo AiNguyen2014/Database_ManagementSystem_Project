@@ -9,6 +9,8 @@
         public string GioiTinh { get; set; }
         public DateTime NgayVaoLam { get; set; }
         public string SoDienThoai { get; set; }
+        public string ChucVu { get; set; }
+
         public string CCCD { get; set; }
         public string TenVaiTro { get; set; }
     }
