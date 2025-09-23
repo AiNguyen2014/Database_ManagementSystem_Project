@@ -33,14 +33,43 @@ namespace SaleManagementLibrraly.DataAccess
         {
             try
             {
+                // Tính ThanhTien gốc
+                decimal thanhTienGoc = (decimal)cthd.SoLuong * (decimal)cthd.DonGia;
+                cthd.ThanhTien = thanhTienGoc;
+
+                // Lấy danh sách khuyến mãi áp dụng (giả sử có KhuyenMaiDAL)
+                var khuyenMaiList = KhuyenMaiDAL.Instance.GetApDungKhuyenMai(cthd.MaSP ?? 0, cthd.SoLuong ?? 0, DateTime.Now);
+
+                /// Khởi tạo mức giảm giá cao nhất
+                decimal maxGiamGia = 0;
+
+                // Vòng lặp để tìm mức giảm giá cao nhất
+                foreach (var km in khuyenMaiList)
+                {
+                    decimal giamGiaTemp = TinhGiamGia(km, thanhTienGoc, cthd.SoLuong ?? 0, (decimal)cthd.DonGia);
+
+                    // So sánh và cập nhật mức giảm giá cao nhất
+                    if (giamGiaTemp > maxGiamGia)
+                    {
+                        maxGiamGia = giamGiaTemp;
+                    }
+                }
+
+                // Áp dụng giảm giá
+                cthd.GiamGia = maxGiamGia;
+                cthd.ThanhTienSauGiam = thanhTienGoc - maxGiamGia;
+
+                // Chuẩn bị tham số cho stored procedure
                 string procedureName = "sp_ThemChiTietHoaDon";
                 var parameters = new List<SqlParameter>
                 {
                     StockDataProvider.CreateParameter("@MaHD", 0, cthd.MaHD, DbType.Int32),
                     StockDataProvider.CreateParameter("@MaSP", 0, cthd.MaSP, DbType.Int32),
-                    StockDataProvider.CreateParameter("@SoLuong", 0, cthd.SoLuong, DbType.Int32)
+                    StockDataProvider.CreateParameter("@SoLuong", 0, cthd.SoLuong, DbType.Int32),
+                    
                 };
-                // Gọi stored procedure thay vì INSERT trực tiếp
+
+                // Gọi stored procedure
                 dataProvider.Insert(procedureName, CommandType.StoredProcedure, parameters.ToArray());
             }
             catch (Exception ex)
@@ -50,6 +79,26 @@ namespace SaleManagementLibrraly.DataAccess
             finally
             {
                 CloseConnection();
+            }
+        }
+
+        // Hàm tính giảm giá
+        private decimal TinhGiamGia(KhuyenMai km, decimal thanhTienGoc, int soLuong, decimal donGia)
+        {
+            if (km == null || string.IsNullOrEmpty(km.LoaiKhuyenMai)) return 0;
+            switch (km.LoaiKhuyenMai)
+            {
+                case "GIAM_TIEN_SP":
+                    return km.UD_GiaTriGiam ?? 0;
+                case "GIAM_PHAN_TRAM_SP":
+                    return thanhTienGoc * (km.UD_PhanTramGiam ?? 0) / 100;
+                case "MUA_X_TANG_Y":
+                    // Lấy số lượng sản phẩm được tặng
+                    int soLuongTang = (soLuong / (km.DK_SoLuong ?? 1)) * (km.UD_SoLuong ?? 0);
+                    // Giá trị giảm là số lượng tặng nhân với đơn giá
+                    return soLuongTang * donGia;
+                default:
+                    return 0;
             }
         }
 
@@ -97,30 +146,41 @@ namespace SaleManagementLibrraly.DataAccess
                 CloseConnection();
             }
         }
+
         public SanPhamKhuyenMai GetSanPhamKhuyenMai(int maSP)
         {
             try
             {
-                string sql = "SELECT TenSP, GiaBan, GiaTriGiam, GiaSauGiam FROM vw_SanPhamKhuyenMai WHERE MaSP = @MaSP";
+                string sql = @"
+            SELECT TenSP, GiaBan, GiaSauGiam, TenKhuyenMai, MoTaKhuyenMaiDacBiet
+            FROM vw_SanPhamKhuyenMai WHERE MaSP = @MaSP";
+
                 var parameters = new List<SqlParameter>
-                {
-                    StockDataProvider.CreateParameter("@MaSP", 4, maSP, DbType.Int32)
-                };
+        {
+            StockDataProvider.CreateParameter("@MaSP", 4, maSP, DbType.Int32)
+        };
 
                 using (var reader = dataProvider.GetDataReader(sql, CommandType.Text, parameters.ToArray()))
                 {
                     if (reader.Read())
                     {
+                        var tenKhuyenMai = reader.IsDBNull(reader.GetOrdinal("TenKhuyenMai")) ? "Không có" : reader["TenKhuyenMai"].ToString();
+                        var moTaDacBiet = reader.IsDBNull(reader.GetOrdinal("MoTaKhuyenMaiDacBiet")) ? null : reader["MoTaKhuyenMaiDacBiet"].ToString();
+                        var giaBan = reader.IsDBNull(reader.GetOrdinal("GiaBan")) ? 0 : reader.GetDecimal(reader.GetOrdinal("GiaBan"));
+                        var giaSauGiam = reader.IsDBNull(reader.GetOrdinal("GiaSauGiam")) ? giaBan : reader.GetDecimal(reader.GetOrdinal("GiaSauGiam"));
+
                         return new SanPhamKhuyenMai
                         {
                             MaSP = maSP,
                             TenSP = reader["TenSP"].ToString(),
-                            GiaBan = Convert.ToDecimal(reader["GiaBan"]),
-                            GiaTriGiam = Convert.ToDecimal(reader["GiaTriGiam"]),
-                            GiaSauGiam = Convert.ToDecimal(reader["GiaSauGiam"])
+                            GiaBan = giaBan,
+                            GiaSauGiam = giaSauGiam,
+                            GiaTriGiam = giaBan - giaSauGiam, // Tính lại GiamGia để hiển thị
+                            TenKhuyenMai = tenKhuyenMai,
+                            MoTaKhuyenMaiDacBiet = moTaDacBiet
                         };
                     }
-                    return null; // Trả về null nếu không tìm thấy
+                    return null;
                 }
             }
             catch (Exception ex)

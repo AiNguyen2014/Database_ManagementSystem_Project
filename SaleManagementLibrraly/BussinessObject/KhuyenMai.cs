@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SaleManagementLibrraly.BussinessObject
 {
@@ -15,8 +11,13 @@ namespace SaleManagementLibrraly.BussinessObject
         public int MaHT { get; set; }
         public DateTime NgayBD { get; set; }
         public DateTime NgayKT { get; set; }
+        public int? DK_MaSP { get; set; }
+        public int? DK_SoLuong { get; set; } 
+        public int? UD_MaSP { get; set; } 
+        public int? UD_SoLuong { get; set; } 
+        public decimal? UD_PhanTramGiam { get; set; } 
+        public decimal? UD_GiaTriGiam { get; set; } 
+        public string LoaiKhuyenMai { get; set; } 
         public string DieuKien { get; set; }
-        public HinhThucKM HinhThucKM { get; set; }
-        public ICollection<ChiTietKhuyenMai> ChiTietKhuyenMais { get; set; }
     }
 }

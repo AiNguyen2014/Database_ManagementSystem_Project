@@ -156,38 +156,6 @@ namespace SaleManagementLibrraly.DataAccess
                 throw new Exception("Lỗi khi xóa nhân viên: " + ex.Message);
             }
         }
-        public NhanVien GetNhanVienByID(int maNV)
-        {
-            NhanVien nhanVien = null;
-            string SQLSelect = @"SELECT MaNV, HoTen, NgaySinh, DiaChi, GioiTinh, 
-                                NgayVaoLam, SoDienThoai, ChucVu, CCCD 
-                         FROM NhanVien WHERE MaNV = @MaNV";
-            var param = StockDataProvider.CreateParameter("@MaNV", 4, maNV, DbType.Int32);
-
-            try
-            {
-                using var reader = new StockDataProvider().GetDataReader(SQLSelect, CommandType.Text, param);
-                if (reader.Read()) // Nếu tìm thấy dữ liệu
-                {
-                    nhanVien = new NhanVien
-                    {
-                        MaNV = reader.GetInt32(0),
-                        HoTen = reader.GetString(1),
-                        NgaySinh = reader.GetDateTime(2),
-                        DiaChi = reader.GetString(3),
-                        GioiTinh = reader.GetString(4),
-                        NgayVaoLam = reader.GetDateTime(5),
-                        SoDienThoai = reader.GetString(6),
-                        ChucVu = reader.GetString(7),
-                        CCCD = reader.GetString(8)
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi khi lấy thông tin nhân viên theo ID: " + ex.Message);
-            }
-            return nhanVien;
-        }
+        
     }
 }

@@ -37,11 +37,15 @@
             ucLuong1 = new ucLuong();
             tabBaoCao = new TabPage();
             ucBaoCao1 = new ucBaoCao();
+            tabCongViec = new TabPage();
+            btBangHang = new Button();
+            sqlCommandBuilder1 = new Microsoft.Data.SqlClient.SqlCommandBuilder();
             tabControl1.SuspendLayout();
             tabHoSo.SuspendLayout();
             tabChamCong.SuspendLayout();
             tabLuong.SuspendLayout();
             tabBaoCao.SuspendLayout();
+            tabCongViec.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -50,6 +54,7 @@
             tabControl1.Controls.Add(tabChamCong);
             tabControl1.Controls.Add(tabLuong);
             tabControl1.Controls.Add(tabBaoCao);
+            tabControl1.Controls.Add(tabCongViec);
             tabControl1.Dock = DockStyle.Fill;
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
@@ -84,7 +89,6 @@
             tabChamCong.Name = "tabChamCong";
             tabChamCong.Padding = new Padding(3);
             tabChamCong.Size = new Size(943, 563);
-            tabChamCong.Size = new Size(780, 508);
             tabChamCong.TabIndex = 1;
             tabChamCong.Text = "Chấm công";
             tabChamCong.UseVisualStyleBackColor = true;
@@ -105,7 +109,6 @@
             tabLuong.Name = "tabLuong";
             tabLuong.Padding = new Padding(3);
             tabLuong.Size = new Size(943, 563);
-            tabLuong.Size = new Size(780, 508);
             tabLuong.TabIndex = 2;
             tabLuong.Text = "Lương";
             tabLuong.UseVisualStyleBackColor = true;
@@ -139,6 +142,29 @@
             ucBaoCao1.Size = new Size(937, 557);
             ucBaoCao1.TabIndex = 0;
             // 
+            // tabCongViec
+            // 
+            tabCongViec.BackColor = Color.DarkBlue;
+            tabCongViec.Controls.Add(btBangHang);
+            tabCongViec.ForeColor = SystemColors.ControlLightLight;
+            tabCongViec.Location = new Point(4, 29);
+            tabCongViec.Name = "tabCongViec";
+            tabCongViec.Padding = new Padding(3);
+            tabCongViec.Size = new Size(943, 563);
+            tabCongViec.TabIndex = 4;
+            tabCongViec.Text = "Công việc";
+            // 
+            // btBangHang
+            // 
+            btBangHang.ForeColor = Color.DarkBlue;
+            btBangHang.Location = new Point(68, 42);
+            btBangHang.Name = "btBangHang";
+            btBangHang.Size = new Size(132, 32);
+            btBangHang.TabIndex = 0;
+            btBangHang.Text = "Bán Hàng";
+            btBangHang.UseVisualStyleBackColor = true;
+            btBangHang.Click += btBangHang_Click;
+            // 
             // frmMainNhanVien
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -154,6 +180,7 @@
             tabChamCong.ResumeLayout(false);
             tabLuong.ResumeLayout(false);
             tabBaoCao.ResumeLayout(false);
+            tabCongViec.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -164,9 +191,12 @@
         private TabPage tabChamCong;
         private TabPage tabLuong;
         private TabPage tabBaoCao;
+        private TabPage tabCongViec;
         private ucChamCong ucChamCong1;
         private ucNhanVienManager ucNhanVienManager1;
         private ucLuong ucLuong1;
         private ucBaoCao ucBaoCao1;
+        private Button btBangHang;
+        private Microsoft.Data.SqlClient.SqlCommandBuilder sqlCommandBuilder1;
     }
 }

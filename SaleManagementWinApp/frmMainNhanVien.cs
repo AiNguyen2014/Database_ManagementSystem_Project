@@ -33,13 +33,23 @@ namespace SaleManagementWinApp
 
                 if (LoggedInAccount != null && LoggedInAccount.MaNV.HasValue)
                 {
+                    // Chỉ gọi phương thức này khi MaNV có giá trị
                     currentNhanVien = NhanVienDAL.Instance.GetNhanVienByID(LoggedInAccount.MaNV.Value);
+
                     if (currentNhanVien != null)
                     {
                         this.Text = $"Nhân viên: {currentNhanVien.HoTen} ({LoggedInAccount.TenVaiTro})";
                         PhanQuyenTabs(LoggedInAccount.TenVaiTro);
                         TruyenThongTinVaoUserControls();
                     }
+                }
+                else
+                {
+                    // THÊM LOGIC XỬ LÝ KHI TÀI KHOẢN KHÔNG PHẢI NHÂN VIÊN
+                    // Ví dụ: ẩn hết các tab hoặc hiển thị một thông báo
+                    MessageBox.Show("Tài khoản này không liên kết với một nhân viên.");
+                    // Ẩn tất cả các tab nếu tài khoản không phải là nhân viên
+                    tabControl1.TabPages.Clear();
                 }
             }
             catch (Exception ex)
@@ -57,6 +67,7 @@ namespace SaleManagementWinApp
             // 2. Thêm lại các tab mà vai trò nào cũng được xem
             tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabHoSo"));
             tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabChamCong"));
+            tabControl1.TabPages.Add(originalTabPages.Find(t => t.Name == "tabCongViec"));
 
             // 3. Nếu là Quản lý, thêm các tab đặc biệt
             if (tenVaiTro.Equals("Quản lý", StringComparison.OrdinalIgnoreCase))
@@ -82,6 +93,19 @@ namespace SaleManagementWinApp
             {
                 ucL.CurrentNhanVien = this.currentNhanVien;
             }
+        }
+
+        private void btBangHang_Click(object sender, EventArgs e)
+        {
+            foreach (Form form in this.MdiChildren)
+            {
+                if (form.GetType() != typeof(frmBanHang))
+                {
+                    form.Close();
+                }
+            }
+            frmBanHang frmBH = new frmBanHang();
+            frmBH.Show();
         }
     }
 }

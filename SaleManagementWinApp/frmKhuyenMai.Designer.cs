@@ -32,6 +32,9 @@
             label1 = new Label();
             textBox1 = new TextBox();
             dataGridView1 = new DataGridView();
+            btUpdate = new Button();
+            btAdd = new Button();
+            btRemove = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -51,7 +54,7 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label1.ForeColor = SystemColors.ControlLightLight;
-            label1.Location = new Point(328, 101);
+            label1.Location = new Point(55, 130);
             label1.Name = "label1";
             label1.Size = new Size(136, 20);
             label1.TabIndex = 1;
@@ -59,20 +62,47 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(484, 98);
+            textBox1.Location = new Point(197, 127);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(505, 27);
+            textBox1.Size = new Size(613, 27);
             textBox1.TabIndex = 2;
             // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(328, 141);
+            dataGridView1.Location = new Point(41, 176);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.RowTemplate.Height = 29;
             dataGridView1.Size = new Size(769, 298);
             dataGridView1.TabIndex = 3;
+            // 
+            // btUpdate
+            // 
+            btUpdate.Location = new Point(41, 538);
+            btUpdate.Name = "btUpdate";
+            btUpdate.Size = new Size(94, 29);
+            btUpdate.TabIndex = 4;
+            btUpdate.Text = "Cập nhật ";
+            btUpdate.UseVisualStyleBackColor = true;
+            // 
+            // btAdd
+            // 
+            btAdd.Location = new Point(197, 538);
+            btAdd.Name = "btAdd";
+            btAdd.Size = new Size(94, 29);
+            btAdd.TabIndex = 5;
+            btAdd.Text = "Thêm";
+            btAdd.UseVisualStyleBackColor = true;
+            // 
+            // btRemove
+            // 
+            btRemove.Location = new Point(346, 538);
+            btRemove.Name = "btRemove";
+            btRemove.Size = new Size(94, 29);
+            btRemove.TabIndex = 6;
+            btRemove.Text = "Xóa";
+            btRemove.UseVisualStyleBackColor = true;
             // 
             // frmKhuyenMai
             // 
@@ -80,6 +110,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkBlue;
             ClientSize = new Size(1409, 636);
+            Controls.Add(btRemove);
+            Controls.Add(btAdd);
+            Controls.Add(btUpdate);
             Controls.Add(dataGridView1);
             Controls.Add(textBox1);
             Controls.Add(label1);
@@ -98,5 +131,8 @@
         private Label label1;
         private TextBox textBox1;
         private DataGridView dataGridView1;
+        private Button btUpdate;
+        private Button btAdd;
+        private Button btRemove;
     }
 }

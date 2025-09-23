@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SaleManagementLibrraly.DataAccess
 {
-    public class KhuyenMaiDAL
+    public class KhuyenMaiDAL : BaseDAL
     {
         private static KhuyenMaiDAL instance = null;
         private static readonly object instanceLock = new object();
@@ -78,7 +78,66 @@ namespace SaleManagementLibrraly.DataAccess
                 throw new Exception("Lỗi khi lấy khuyến mãi theo mã: " + ex.Message, ex);
             }
         }
+        public List<KhuyenMai> GetApDungKhuyenMai(int maSP, int soLuong, DateTime ngayLap)
+        {
+            try
+            {
+                string sql = @"
+            SELECT
+                km.MaKM,
+                km.TenKM,
+                km.LoaiKhuyenMai,
+                km.NgayBD,
+                km.NgayKT,
+                km.DK_SoLuong,
+                km.UD_SoLuong,
+                km.UD_PhanTramGiam,
+                km.UD_GiaTriGiam
+            FROM KhuyenMai km
+            INNER JOIN ChiTietKhuyenMai ctkm ON km.MaKM = ctkm.MaKM
+            WHERE
+                km.NgayBD <= @NgayLap AND km.NgayKT >= @NgayLap
+                AND ctkm.MaSP = @MaSP
+                -- This is the crucial fix: include promotions with no quantity condition (DK_SoLuong IS NULL)
+                AND (km.DK_SoLuong IS NULL OR km.DK_SoLuong <= @SoLuong)";
 
+                var parameters = new List<SqlParameter>
+        {
+            StockDataProvider.CreateParameter("@MaSP", 4, maSP, DbType.Int32),
+            StockDataProvider.CreateParameter("@SoLuong", 4, soLuong, DbType.Int32),
+            StockDataProvider.CreateParameter("@NgayLap", 0, ngayLap, DbType.DateTime)
+        };
+
+                var khuyenMaiList = new List<KhuyenMai>();
+                using (var reader = dataProvider.GetDataReader(sql, CommandType.Text, parameters.ToArray()))
+                {
+                    while (reader.Read())
+                    {
+                        khuyenMaiList.Add(new KhuyenMai
+                        {
+                            MaKM = reader.GetInt32(reader.GetOrdinal("MaKM")),
+                            TenKM = reader["TenKM"].ToString(),
+                            LoaiKhuyenMai = reader["LoaiKhuyenMai"].ToString(),
+                            NgayBD = reader.GetDateTime(reader.GetOrdinal("NgayBD")),
+                            NgayKT = reader.GetDateTime(reader.GetOrdinal("NgayKT")),
+                            DK_SoLuong = reader.IsDBNull(reader.GetOrdinal("DK_SoLuong")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("DK_SoLuong")),
+                            UD_SoLuong = reader.IsDBNull(reader.GetOrdinal("UD_SoLuong")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("UD_SoLuong")),
+                            UD_PhanTramGiam = reader.IsDBNull(reader.GetOrdinal("UD_PhanTramGiam")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("UD_PhanTramGiam")),
+                            UD_GiaTriGiam = reader.IsDBNull(reader.GetOrdinal("UD_GiaTriGiam")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("UD_GiaTriGiam"))
+                        });
+                    }
+                }
+                return khuyenMaiList;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy khuyến mãi: " + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
         public void AddNew(KhuyenMai km)
         {
             string SQL = "INSERT INTO KhuyenMai (MaKM, TenKM, MaHT, NgayBD, NgayKT, DieuKien) VALUES (@MaKM, @TenKM, @MaHT, @NgayBD, @NgayKT, @DieuKien)";

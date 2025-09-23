@@ -71,11 +71,12 @@ namespace SaleManagementWinApp
                     else
                     {
                         // Nếu là bất kỳ vai trò nào khác (Quản lý, NV Bán hàng, NV Kho) -> Mở form Nhân viên
-                        frmMainNhanVien f_main_nv = new frmMainNhanVien
+                        frmMainNhanVien f_main_nv = new frmMainNhanVien()
                         {
                             LoggedInAccount = taiKhoan
                         };
-                        f_main_nv.ShowDialog();
+                        f_main_nv.ShowDialog(); 
+                        
                     }
                     this.Close();
                 }

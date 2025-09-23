@@ -194,8 +194,8 @@ namespace SaleManagementWinApp
                 if (spKhuyenMai != null)
                 {
                     // SỬA Ở ĐÂY: Thêm ?? 0 để xử lý trường hợp giá trị có thể là null
-                    donGiaApDung = spKhuyenMai.GiaSauGiam ?? 0;
-                    giamGiaValue = spKhuyenMai.GiaTriGiam ?? 0;
+                    donGiaApDung = spKhuyenMai.GiaSauGiam;
+                    giamGiaValue = spKhuyenMai.GiaTriGiam;
                 }
                 else
                 {
