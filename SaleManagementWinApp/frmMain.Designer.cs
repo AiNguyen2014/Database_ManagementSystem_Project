@@ -106,7 +106,6 @@
             qLKhuyếnMãiToolStripMenuItem.Name = "qLKhuyếnMãiToolStripMenuItem";
             qLKhuyếnMãiToolStripMenuItem.Size = new Size(224, 26);
             qLKhuyếnMãiToolStripMenuItem.Text = "QL Khuyến Mãi";
-            qLKhuyếnMãiToolStripMenuItem.Click += qLKhuyếnMãiToolStripMenuItem_Click;
             // 
             // hóaĐơnToolStripMenuItem
             // 
