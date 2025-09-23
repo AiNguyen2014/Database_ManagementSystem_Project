@@ -103,20 +103,6 @@ namespace SaleManagementWinApp
             frmBH.Show();
         }
 
-        private void qLKhuyếnMãiToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Form form in this.MdiChildren)
-            {
-                if (form.GetType() != typeof(frmKhuyenMai))
-                {
-                    form.Close();
-                }
-            }
-            frmKhuyenMai frmBH = new frmKhuyenMai();
-            frmBH.MdiParent = this;
-            frmBH.Show();
-        }
-
         private void frmMain_Load(object sender, EventArgs e)
         {
 
